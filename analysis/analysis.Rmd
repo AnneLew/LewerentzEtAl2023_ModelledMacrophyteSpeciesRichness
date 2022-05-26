@@ -1,0 +1,116 @@
+---
+title: "Potential changes of macrophyte species richness"
+author: "Anne Lewerentz, Markus Hoffmann, Juliano S. Cabral et al"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_folding: hide
+    number_sections: true
+    toc: true
+    toc_float: true
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, out.width = "80%")
+```
+
+
+# Methods and Setup 
+## Load Packages 
+```{r load packages, results='hide', message=FALSE}
+library(LewerentzEtAl2022)
+library(data.table)
+library(here)
+library(tidyverse)
+library(styler)
+library(corrplot)
+library(RColorBrewer)
+library(ggrepel)
+library(ggpmisc)
+library(ggpubr)
+library(kableExtra)
+library(knitr)
+library(BBmisc) #normalize function
+library(factoextra) #PCA
+library(magrittr)
+
+# GLM outputs
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(jtools)
+library(patchwork) # combine figures
+library(colorBlindness) # check colors
+library(rcartocolor)
+
+```
+
+
+
+## Set theme & colors
+```{r create ggplot theme, fig.height=2.5}
+
+theme_analysis <- function(base_size = 14) {
+  theme_minimal(base_size = base_size) %+replace%
+    theme(
+      # changed theme options
+    )
+}
+# Changing the default theme
+theme_set(theme_analysis())
+
+
+# SET COLOR SCHEMES
+scale_colour_continuous <- scale_colour_viridis_c
+scale_colour_discrete   <- scale_colour_viridis_d
+scale_colour_binned     <- scale_colour_viridis_b
+
+# See options within package
+#display_carto_all(colorblind_friendly = TRUE)
+
+depthPalette <- carto_pal(5, "Teal")[2:5]
+TempPalette<- carto_pal(3, "Peach")
+TurbNutrPalette<- carto_pal(7, "Earth")[c(1:4)]
+WinnerLoserPalette<- c(carto_pal(2,"PinkYl")[c(2)],carto_pal(2,"TealGrn")[c(1)])
+#TrophiePalette <- c(carto_pal(4, "BrwnYl"))[-1] #oligo, meso, eu, others
+TrophiePalette <- c("cornflowerblue","aquamarine4","coral4")
+#displayAllColors(TrophiePalette)
+
+#displayAllColors(depthPalette) + 
+  #displayAllColors(TempPalette) + 
+  #displayAllColors(TurbNutrPalette) +
+  #displayAllColors(WinnerLoserPalette)+
+  displayAllColors(TrophiePalette)
+```
+
+
+```{r}
+SPlength <- length(Makroph_commLastYear)-3
+Makroph_commLastYear$GAMMA <- vegan::specnumber(Makroph_commLastYear[,c(4:85)])
+
+Makroph_commLastYearfin<-Makroph_commLastYear %>% # %>%
+  filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
+                     "Grosser Brombachsee",
+                     "Gruentensee","Igelsbachsee", 
+                     "Kleiner Brombachsee",
+                     "Liebensteinspeicher","Rottachsee", 
+                     "Steinberger See","Untreusee",
+                     "Walchensee","Murnersee","Rothsee",
+                     "Seehamer See"))%>%
+  select(where(~ any(. != 0)))
+
+MAK_MAPPED_NSPEC <- Makroph_commLastYearfin %>%
+  select(-Lake, -YEAR, -Depth, -GAMMA) %>% ncol()
+
+MAK_MAPPED<-Makroph_commLastYearfin %>% 
+  #rename(Lake=Gewässer, Depth=Tiefe) %>% #%>%  spread(Depth, GAMMA)
+  select(Lake, YEAR, Depth, GAMMA) %>%
+  mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
+
+MAK_MAPPED$LakeID <- MAK_MAPPED  %>% group_indices(Lake) 
+
+MAK_MAPPED <- MAK_MAPPED %>% mutate(LakeID=paste0("lake_",LakeID))
+
+```
+
