@@ -1,0 +1,16 @@
+Package: LewerentzEtAl2022
+Type: Package
+Title: Data Analysis for LewerentzEtAl2022
+Version: 0.1.0
+Authors@R: 
+    person(given = "Anne",
+           family = "Lewerentz",
+           role = c("aut", "cre"),
+           email = "anne.lewerentz@uni-wuerzburg.de")
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Data Analysis for LewerentzEtAl2022
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 2.10)
