@@ -1,6 +1,6 @@
 ---
 title: "Potential changes of macrophyte species richness"
-author: "Anne Lewerentz, Markus Hoffmann, Juliano S. Cabral et al"
+author: "Anne Lewerentz, et al"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -89,7 +89,7 @@ TrophiePalette <- c("cornflowerblue","aquamarine4","coral4")
 
 # Results
 ## Overview lake grouping
-Mean lake area per lake group
+Mean geographic variables per lake group:
 ```{r}
 data_lakes_env_class %>% 
   left_join(Morphology, by=c("LakeName"="Name_Makro_short") ) %>% 
@@ -103,7 +103,7 @@ data_lakes_env_class %>%
 
 
 
-Number of Lakes per Lake group
+Number of Lakes per Lake group:
 
 ```{r}
 data_lakes_env_class %>% count(class) %>% kable() %>% kable_styling()
@@ -115,54 +115,12 @@ data_lakes_env_class %>% count(class) %>% kable() %>% kable_styling()
 
 
 
-## Env conditions within scenarios
-```{r}
-data_lakes_env_classfuture<-data_lakes_env_class
-
-data_lakes_env_classfuture$maxNut_m1 <- data_lakes_env_classfuture$maxNutrient-0.25*data_lakes_env_classfuture$maxNutrient
-
-data_lakes_env_classfuture$maxNut_1 <- data_lakes_env_classfuture$maxNutrient+0.25*data_lakes_env_classfuture$maxNutrient
-
-data_lakes_env_classfuture$maxkD_m1 <- data_lakes_env_classfuture$maxKd-0.25*data_lakes_env_classfuture$maxKd
-
-data_lakes_env_classfuture$maxkD_1 <- data_lakes_env_classfuture$maxKd+0.25*data_lakes_env_classfuture$maxKd
-
-data_lakes_env_classfuture$maxTemp_1 <- data_lakes_env_classfuture$maxTemp+1.5
-
-data_lakes_env_classfuture$maxTemp_2 <- data_lakes_env_classfuture$maxTemp+3.0
-
-meanEnv<-data_lakes_env_classfuture %>% group_by(class) %>% 
-  select(latitude, maxNutrient, maxTemp, maxKd) %>%
-  summarise_each(funs(mean, sd))
-
-knitr::kable(meanEnv[,c(1:5)], digits = 4)
-knitr::kable(meanEnv[,c(1,6:9)], digits = 4)
 
 
-
-env_table<-data_lakes_env_classfuture %>% group_by(class) %>% 
-  select(latitude, maxNutrient, maxTemp, maxKd)
+## Q1 - Base scenario
 
 
-
-
-M = cor(env_table %>% ungroup() %>% 
-          select(latitude, maxNutrient,maxTemp,maxKd))
-res1 <- cor.mtest(env_table %>% ungroup() %>% 
-          select(latitude, maxNutrient,maxTemp,maxKd), conf.level = .95)
-corrplot(M, #order = 'AOE', 
-         addCoef.col = 'black', tl.pos = 'd',
-         cl.pos = 'n', col = COL2('PiYG'),p.mat = res1$p, #sig.level = .2,
-         insig = "label_sig",
-         sig.level = c(.001, .01, .05), pch.cex=2, pch.col = "white")
-
-```
-
-
-## Q1 - Pot. species richness
-
-
-### All together: N of species 
+### Bavaria: N of species 
 ```{r, results='hide', message=FALSE}
 surv_spec <- data %>%
   filter(Biomass_cat != 0) %>%
@@ -259,7 +217,7 @@ Complete N of species within the mapped datasets, just indicator species  `r MAK
 
 <br/><br/>
 
-### Per lake: N of species 
+### Number of species per lake
 
 ```{r, results='hide', message=FALSE}
 richLake<-data %>%
@@ -281,16 +239,16 @@ poorLake<-data %>%
 poorLakeName <- MAK_MAPPED %>% filter(LakeID==poorLake$Lake) %>% select(Lake) %>% unique()
 ```
 
-Per lake between `r poorLake[1,2]` (`r poorLake[1,1]` in `r poorLakeName[1,1]`,  - `r round(poorLake[1,2]/NSPECbase*100, digits=2)` %) and `r richLake[1,2]` (`r richLake[1,1]`  in `r richLakeName`,   - `r round(richLake[1,2]/NSPECbase*100, digits=2)` %) species can grow.
-
-Thus, we have a difference between lakes. 
+Per lake between `r poorLake[1,2]` (`r poorLake[1,1]` in `r poorLakeName[1,1]`,  - `r round(poorLake[1,2]/NSPECbase*100, digits=2)` %) and `r richLake[1,2]` (`r richLake[1,1]`  in `r richLakeName`,   - `r round(richLake[1,2]/NSPECbase*100, digits=2)` %) virtual species can grow.
 
 
+
+Compared with observed species richness: 
 ```{r}
 real_Barmsee <-MAK_grouped_depthindep %>% filter(Lake=="Barmsee") %>%
   filter(Group!="none") %>% ungroup() %>% summarise(NSPECperc=sum(NSPECperc))
 ```
-Realised species richness Barmsee: `r real_Barmsee`
+Observed species richness in Barmsee: `r real_Barmsee`
 
 
 
@@ -298,13 +256,15 @@ Realised species richness Barmsee: `r real_Barmsee`
 real_Langbuerg<-MAK_grouped_depthindep %>% filter(Lake=="Langbuergner See") %>%
   filter(Group!="none") %>% ungroup() %>% summarise(NSPECperc=sum(NSPECperc))
 ```
-Real. spec richness Langbürgner See: `r real_Langbuerg`
+Observed spec richness in lake Langbürgner: `r real_Langbuerg`
 
 
 
 
-### Per lakes group
-Potential
+### Per lake type
+
+Potential species richness (%)
+
 ```{r}
 Nspecies_P_groupes<-data %>%
   left_join((data_lakes_env_class %>% 
@@ -346,7 +306,8 @@ knitr::kable(left_join(Nspecies_P_groupes,Nspecies_P_groupes_all, by="class"), d
 
 
 
-Realised % of species within lake groups and per species groups
+Observes species richness within lake types and per species groups (%)
+
 ```{r}
 Nspaclakclass<-Makroph_comm_S %>%
   gather("Species", "Kohler",5:89) %>%
@@ -421,7 +382,7 @@ knitr::kable(left_join(Nspaclakclass, Nspaclakclass_all, by="class"), digits = 1
 
 
 
-### FIG2 : DDG  
+### FIG2 : Depth diversity gradient of potential and observed species richness  
 
 
 ```{r}
@@ -561,21 +522,6 @@ FIG2
 ```
 
 
-```{r}
-lakesDDG %>%
-  #filter(type=="mapped")%>%
-  left_join((data_lakes_env_class %>% mutate(Lake=paste0("lake_",Lake)) %>%
-               select(-LakeName)),
-            by=c("Lake")) %>%
-  spread(type,NSpecP)%>%
-  mutate(potMINUSobserv=model-mapped)%>%
-  mutate(error=ifelse(potMINUSobserv>0,"underestim",
-                      ifelse(potMINUSobserv<0,"overestim",
-                      "exact"))) %>%
-  group_by(Group,class) %>%
-  count(error)%>% 
-  spread("error","n")
-```
 
 
 
@@ -614,10 +560,11 @@ Fig5_part
 ```
 
 
-## Q2 - Scenarios
+## Q2 - Future Scenarios
 
-### All lakes together
-#### Number of lost species per scenario [%]
+### Bavaria
+
+#### Number of lost species per scenario (%)
 ```{r}
 #Berechnung überprüft
 
@@ -646,7 +593,7 @@ knitr::kable(SPEC_DEAD, digits = 1)%>% kable_styling()
 
 
 
-#### Nspec lost per trophy group
+#### Nspec lost per functional type
 ```{r}
 NSPECbaseGroup <- scenario_data %>% 
   filter(speciesID %in% c(14000:14300))%>% select(speciesID) %>% unique() %>% nrow()
@@ -713,15 +660,11 @@ knitr::kable(SPEC_DEAD_group_eu, digits = 1)%>% kable_styling()
 ```
 
 
-s sterben unter heutigen Temperaturbedingungen mehr Arten aus, als wenn sich 
-die Temperatur erhöht. 
-Oligrotrophe Arten sind besonders betroffen vom Aussterben
-Eutrophe Arten sterben unter klareren Bedingungen nur minimal aus
 
 
 <br/><br/>
 
-#### Per lake group
+#### Number of locally extinc species per lake type
 ```{r}
 
 all_diff_presabs_tobase %>%
@@ -861,11 +804,11 @@ knitr::kable(all_diff_prsabsSD %>% mutate(Temp=c(0,0,0,0,1,1,1,1,2,2,2,2),
 
 ```
 
-Im Mittel können unter CC mehr Arten potentiell in Bayern wachsen. 
 
 
-#### Mean Number of species per lake and species group
-For oligotroph
+
+#### Mean Number of species per lake type and species group
+
 
 ```{r}
 # Mean n of species per scenario ***
