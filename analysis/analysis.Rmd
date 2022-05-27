@@ -86,31 +86,48 @@ TrophiePalette <- c("cornflowerblue","aquamarine4","coral4")
 
 
 ```{r}
-SPlength <- length(Makroph_commLastYear)-3
-Makroph_commLastYear$GAMMA <- vegan::specnumber(Makroph_commLastYear[,c(4:85)])
-
-Makroph_commLastYearfin<-Makroph_commLastYear %>% # %>%
-  filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
-                     "Grosser Brombachsee",
-                     "Gruentensee","Igelsbachsee", 
-                     "Kleiner Brombachsee",
-                     "Liebensteinspeicher","Rottachsee", 
-                     "Steinberger See","Untreusee",
-                     "Walchensee","Murnersee","Rothsee",
-                     "Seehamer See"))%>%
-  select(where(~ any(. != 0)))
-
-MAK_MAPPED_NSPEC <- Makroph_commLastYearfin %>%
-  select(-Lake, -YEAR, -Depth, -GAMMA) %>% ncol()
-
-MAK_MAPPED<-Makroph_commLastYearfin %>% 
-  #rename(Lake=Gewässer, Depth=Tiefe) %>% #%>%  spread(Depth, GAMMA)
-  select(Lake, YEAR, Depth, GAMMA) %>%
-  mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
-
-MAK_MAPPED$LakeID <- MAK_MAPPED  %>% group_indices(Lake) 
-
-MAK_MAPPED <- MAK_MAPPED %>% mutate(LakeID=paste0("lake_",LakeID))
-
+# SPlength <- length(Makroph_commLastYear)-3
+# Makroph_commLastYear$GAMMA <- vegan::specnumber(Makroph_commLastYear[,c(4:85)])
+# 
+# Makroph_commLastYearfin<-Makroph_commLastYear %>% # %>%
+#   filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
+#                      "Grosser Brombachsee",
+#                      "Gruentensee","Igelsbachsee", 
+#                      "Kleiner Brombachsee",
+#                      "Liebensteinspeicher","Rottachsee", 
+#                      "Steinberger See","Untreusee",
+#                      "Walchensee","Murnersee","Rothsee",
+#                      "Seehamer See"))%>%
+#   select(where(~ any(. != 0)))
+# 
+# MAK_MAPPED_NSPEC <- Makroph_commLastYearfin %>%
+#   select(-Lake, -YEAR, -Depth, -GAMMA) %>% ncol()
+# 
+# MAK_MAPPED<-Makroph_commLastYearfin %>% 
+#   #rename(Lake=Gewässer, Depth=Tiefe) %>% #%>%  spread(Depth, GAMMA)
+#   select(Lake, YEAR, Depth, GAMMA) %>%
+#   mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
+# 
+# MAK_MAPPED$LakeID <- MAK_MAPPED  %>% group_indices(Lake) 
+# 
+# MAK_MAPPED <- MAK_MAPPED %>% mutate(LakeID=paste0("lake_",LakeID))
+# 
+# fulllakenames <- MAK_MAPPED %>% select(Lake,LakeID) %>% unique() %>%
+#   filter(LakeID!="lake_11")
+# 
+# MAK_MAPPED_di<-Makroph_commLastYearfin %>% 
+#   group_by(Lake) %>% 
+#   summarise_at(vars(Callitriche.cophocarpa:Zannichellia.palustris), mean, na.rm = TRUE)
+#   
+# MAK_MAPPED_di$GAMMA <- vegan::specnumber(MAK_MAPPED_di[,c(2:72)])
+# 
+# MAK_MAPPED_din<-MAK_MAPPED_di %>%
+#   select(Lake,GAMMA)%>%
+#   mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
+# 
+# 
+# MAK_MAPPED_din$LakeID <- MAK_MAPPED_din  %>% group_indices(Lake) 
+# 
+# MAK_MAPPED_din <- MAK_MAPPED_din %>% mutate(LakeID=paste0("lake_",LakeID))
 ```
 
