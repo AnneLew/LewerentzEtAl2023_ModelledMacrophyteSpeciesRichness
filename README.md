@@ -16,11 +16,17 @@
 - add citation
 
 
+## How to reproduce the results
+
 
 ## Data source
 
-Source of all used raw data is: 
-- Bayerisches Landesamt für Umwelt, www.lfu.bayern.de (Published under *Licence CC BY 4.0*).
+Source of raw data is: 
+- Observed data: 
+ - *Makrophyten_WRRL_05-17_nurMakrophytes.csv*:  Bayerisches Landesamt für Umwelt, www.lfu.bayern.de (Published under *Licence CC BY 4.0*)
+ - *Morphology*: Bayerisches Landesamt für Umwelt, www.lfu.bayern.de (Published under *Licence CC BY 4.0*)
+ - *Indexmakrophyten_Gruppenzuordnung*: Melzer, A. (1999). Aquatic macrophytes as tools for lake management. In D. M. Harper, B. Brierley, A. J. D. Ferguson, & G. Phillips (Eds.), The Ecological Bases for Lake and Reservoir Management (pp. 181–190). Springer Netherlands.
+- MGM output: Output of [Macrophytes Growth Model](https://github.com/AnneLew/MGM)
 
 
 
@@ -28,16 +34,16 @@ Source of all used raw data is:
 
 ## Structure of research compendium
 
--   `data-raw/`: Raw datasets for biotic and abiotic data and R code to generate data in preparation files `data/`
+-   `data-raw/`: Raw datasets of model output (*MGMoutput*) and observed data and R code to generate data in preparation files `data/`
 -   `data/`: Cleaned data used for the analysis
 -   `analysis/`: R code in .Rmd files to reproduce tables, figures and analysis of main file and Supplementary material
 
 
 
 
-## How to reproduce the results
 
-### Installation
+
+## Installation
 
 You can install the development version of LewerentzEtAl2022 from [GitHub](https://github.com/) with:
 
@@ -46,6 +52,4 @@ You can install the development version of LewerentzEtAl2022 from [GitHub](https
 devtools::install_github("AnneLew/LewerentzEtAl2022")
 ```
 
-### Run R scripts
 
-To reproduce the results run the R scripts in the following order:
