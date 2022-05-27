@@ -17,39 +17,45 @@ data <- data_raw %>%
   filter(Lake != "lake_11")
 
 # PARAMETERS for Lake and Species - if necessary output FOR FURTHER ANALYSIS
-# data_lakes_env <-
-#   data %>% group_by(Lake) %>% select(
-#     "Lake",
-#     "latitude",
-#     #"minI","maxI","iDelay","maxW","minW","minTemp",
-#     #"tempDelay","minKd","levelCorrection"
-#     "maxNutrient",
-#     "maxTemp",
-#     "maxKd"
-#   ) %>% unique() %>%
-#   select(where( ~ n_distinct(.) > 1))
-# # fwrite(data_lakes_env, "Lakes_env_2.csv")
+data_lakes_env <-
+  data %>% group_by(Lake) %>% select(
+    "Lake",
+    "latitude",
+    #"minI","maxI","iDelay","maxW","minW","minTemp",
+    #"tempDelay","minKd","levelCorrection"
+    "maxNutrient",
+    "maxTemp",
+    "maxKd"
+  ) %>% unique() %>%
+  select(where( ~ n_distinct(.) > 1))
+
+
+
+# fwrite(data_lakes_env, "Lakes_env_2.csv")
 #
-# data_spec_para <- data %>% group_by(Species) %>%
-#   select(
-#     -"Lake",
-#     -"lakeNr",-"latitude",
-#     #-"minI",-"maxI",-"iDelay",-"minTemp",
-#     -"Name",-"maxNutrient",
-#     -"maxW",
-#     -"minW",
-#     -"maxTemp",-"tempDelay",
-#     -"maxKd",
-#     -"minKd",
-#     -"levelCorrection",-"depth_1",
-#     -"depth_2",
-#     -"depth_3",
-#     -"depth_4",
-#     -"Biomass",
-#     -"Biomass_cat"
-#   ) %>%
-#   unique() %>%
-#   select(where( ~ n_distinct(.) > 1))
+data_spec_para <- data %>% group_by(Species) %>%
+  select(
+    -"Lake",
+    -"lakeNr",-"latitude",
+    #-"minI",-"maxI",-"iDelay",-"minTemp",
+    -"Name",-"maxNutrient",
+    -"maxW",
+    -"minW",
+    -"maxTemp",-"tempDelay",
+    -"maxKd",
+    -"minKd",
+    -"levelCorrection",-"depth_1",
+    -"depth_2",
+    -"depth_3",
+    -"depth_4",
+    -"Biomass",
+    -"Biomass_cat"
+  ) %>%
+  unique() %>%
+  select(where( ~ n_distinct(.) > 1))
+
+
+
 # # fwrite(data_spec_para, "Species_parameters_2.csv")
 #
 #
@@ -79,7 +85,8 @@ data <- data_raw %>%
 #   select(-lakeNr,-Species,-Lake,-Name)
 
 usethis::use_data(data, overwrite = TRUE)
-
+usethis::use_data(data_lakes_env, overwrite = TRUE)
+usethis::use_data(data_spec_para, overwrite = TRUE)
 
 
 ## Preprocess todays real species distribution
@@ -324,6 +331,9 @@ MAK_MAPPED <- MAK_MAPPED %>% mutate(LakeID=paste0("lake_",LakeID))
 fulllakenames <- MAK_MAPPED %>% select(Lake,LakeID) %>% unique() %>%
   filter(LakeID!="lake_11")
 
+usethis::use_data(fulllakenames, overwrite = TRUE)
+usethis::use_data(MAK_MAPPED, overwrite = TRUE)
+
 # MAK_MAPPED_di<-Makroph_commLastYearfin %>%
 #   group_by(Lake) %>%
 #   summarise_at(vars(Callitriche.cophocarpa:Zannichellia.palustris), mean, na.rm = TRUE)
@@ -340,13 +350,11 @@ fulllakenames <- MAK_MAPPED %>% select(Lake,LakeID) %>% unique() %>%
 # MAK_MAPPED_din <- MAK_MAPPED_din %>% mutate(LakeID=paste0("lake_",LakeID))
 
 
-#### ###########################################################
-#AB HIER LEFT JOIN GEHT NICHT!
-  #############################################################
-
+#
 ## Gamma richness per indicator group
 MAK_MAPPED_NSPEC_indicationspec <- Makroph_comm_S %>%
   gather("Species", "Kohler",5:89) %>%
+  mutate(Species = str_replace(Species, " ", "."))%>%
   left_join(GroupsSpecies, by = c("Species"="Taxon")) %>%
   dplyr::select(-Trophie,-Typ) %>%
   mutate(Gruppe = ifelse(is.na(Gruppe),"none", Gruppe)) %>%
@@ -365,10 +373,11 @@ MAK_MAPPED_NSPEC_indicationspec <- Makroph_comm_S %>%
                       "Seehamer See")) %>%
   filter(Gruppe!="none") %>% ungroup() %>%
   filter(Kohler!=0) %>%
-  dplyr::select(Species) %>% unique() %>% plyr::count()
-
+  dplyr::select(Species) %>% unique() %>% count()
+usethis::use_data(MAK_MAPPED_NSPEC_indicationspec, overwrite = TRUE)
 
 MAK_grouped <- Makroph_comm_S %>% gather("Species", "Kohler",5:89) %>%
+  mutate(Species = str_replace(Species, " ", "."))%>%
   left_join(GroupsSpecies, by = c("Species"="Taxon")) %>% select(-Trophie,-Typ) %>%
   mutate(Gruppe = ifelse(is.na(Gruppe),"none", Gruppe)) %>%
   group_by(Lake, YEAR,Depth, Species, Gruppe) %>%
@@ -397,6 +406,7 @@ MAK_mapped_grouped <- MAK_grouped %>% filter(LakeID!=11) %>%
 
 ## Depth independent
 MAK_grouped_depthindep <- Makroph_comm_S %>% gather("Species", "Kohler",5:89) %>%
+  mutate(Species = str_replace(Species, " ", "."))%>%
   left_join(GroupsSpecies, by = c("Species"="Taxon")) %>%
   select(-Trophie,-Typ) %>%
   mutate(Gruppe = ifelse(is.na(Gruppe),"none", Gruppe)) %>%
@@ -427,7 +437,8 @@ MAK_mapped_depthind_grouped <- MAK_grouped_depthindep %>%
 
 ## Depth independent and alle lakes
 MAK_grouped_depthindep_alllakes <- Makroph_comm_S %>%
-  gather("Species", "Kohler",5:89) %>%
+  gather("Species", "Kohler",5:89)%>%
+  mutate(Species = str_replace(Species, " ", ".")) %>%
   left_join(GroupsSpecies, by = c("Species"="Taxon")) %>%
   select(-Trophie,-Typ, -Depth) %>%
   mutate(Gruppe = ifelse(is.na(Gruppe),"none", Gruppe)) %>%
@@ -454,4 +465,28 @@ MAK_grouped_depthindep_alllakes <- Makroph_comm_S %>%
   summarise(NSPEC=sum(Kohler)) %>%
   mutate(NSPECperc = NSPEC/MAK_MAPPED_NSPEC_indicationspec$n*100)
 
+usethis::use_data(MAK_grouped_depthindep_alllakes, overwrite = TRUE)
+usethis::use_data(MAK_grouped_depthindep, overwrite = TRUE)
+usethis::use_data(MAK_mapped_grouped, overwrite = TRUE)
 
+
+## Lake clustering
+data_lakes_envscale<-scale(data_lakes_env[,-1] )
+
+distance = dist(data_lakes_envscale)
+mydata.hclust = hclust(distance, method = "ward.D2")
+
+#plot(mydata.hclust)
+member = cutree(mydata.hclust,3)
+data_lakes_env_class=cbind(data_lakes_env,member) %>% rename("class"="...6") %>%
+  left_join(fulllakenames, by=c("Lake"="LakeID")) %>%
+  mutate(Lake=as.numeric(str_remove(Lake,"lake_"))) %>%
+  rename(LakeName=Lake.y) %>%
+  mutate(class=ifelse(class==1,"turb",
+                      ifelse(class==2,"clear",
+                             ifelse(class==3,"medium","NA")))) %>%
+  ungroup()
+
+
+
+usethis::use_data(data_lakes_env_class, overwrite = TRUE)
