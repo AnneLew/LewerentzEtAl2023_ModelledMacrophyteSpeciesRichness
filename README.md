@@ -28,7 +28,7 @@ Source of raw data is:
   - *Morphology*: Bayerisches Landesamt für Umwelt, www.lfu.bayern.de (Published under *Licence CC BY 4.0*)
   - *Indexmakrophyten_Gruppenzuordnung*: Melzer, A. (1999). Aquatic macrophytes as tools for lake management. In D. M. Harper, B. Brierley, A. J. D. Ferguson, & G. Phillips (Eds.), The Ecological Bases for Lake and Reservoir Management (pp. 181–190). Springer Netherlands.
 - MGM output: 
-  - Output of [Macrophytes Growth Model](https://github.com/AnneLew/MGM). The input files and the code to create virtual species is stored in the folder *MGMinput*
+  - Output of [Macrophytes Growth Model](https://github.com/AnneLew/MGM). The input files and the code to create virtual species is stored in the folder `MGMinput/`
 
 
 
