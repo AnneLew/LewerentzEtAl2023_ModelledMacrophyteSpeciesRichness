@@ -81,61 +81,14 @@ TrophiePalette <- c("cornflowerblue","aquamarine4","coral4")
   #displayAllColors(TempPalette) + 
   #displayAllColors(TurbNutrPalette) +
   #displayAllColors(WinnerLoserPalette)+
-  displayAllColors(TrophiePalette)
-```
-
-
-```{r}
-# SPlength <- length(Makroph_commLastYear)-3
-# Makroph_commLastYear$GAMMA <- vegan::specnumber(Makroph_commLastYear[,c(4:85)])
-# 
-# Makroph_commLastYearfin<-Makroph_commLastYear %>% # %>%
-#   filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
-#                      "Grosser Brombachsee",
-#                      "Gruentensee","Igelsbachsee", 
-#                      "Kleiner Brombachsee",
-#                      "Liebensteinspeicher","Rottachsee", 
-#                      "Steinberger See","Untreusee",
-#                      "Walchensee","Murnersee","Rothsee",
-#                      "Seehamer See"))%>%
-#   select(where(~ any(. != 0)))
-# 
-# MAK_MAPPED_NSPEC <- Makroph_commLastYearfin %>%
-#   select(-Lake, -YEAR, -Depth, -GAMMA) %>% ncol()
-# 
-# MAK_MAPPED<-Makroph_commLastYearfin %>% 
-#   #rename(Lake=Gewässer, Depth=Tiefe) %>% #%>%  spread(Depth, GAMMA)
-#   select(Lake, YEAR, Depth, GAMMA) %>%
-#   mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
-# 
-# MAK_MAPPED$LakeID <- MAK_MAPPED  %>% group_indices(Lake) 
-# 
-# MAK_MAPPED <- MAK_MAPPED %>% mutate(LakeID=paste0("lake_",LakeID))
-# 
-# fulllakenames <- MAK_MAPPED %>% select(Lake,LakeID) %>% unique() %>%
-#   filter(LakeID!="lake_11")
-# 
-# MAK_MAPPED_di<-Makroph_commLastYearfin %>% 
-#   group_by(Lake) %>% 
-#   summarise_at(vars(Callitriche.cophocarpa:Zannichellia.palustris), mean, na.rm = TRUE)
-#   
-# MAK_MAPPED_di$GAMMA <- vegan::specnumber(MAK_MAPPED_di[,c(2:72)])
-# 
-# MAK_MAPPED_din<-MAK_MAPPED_di %>%
-#   select(Lake,GAMMA)%>%
-#   mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC*100)
-# 
-# 
-# MAK_MAPPED_din$LakeID <- MAK_MAPPED_din  %>% group_indices(Lake) 
-# 
-# MAK_MAPPED_din <- MAK_MAPPED_din %>% mutate(LakeID=paste0("lake_",LakeID))
+  #displayAllColors(TrophiePalette)
 ```
 
 
 
 
-
-
+# Results
+## Overview lake grouping
 Mean lake area per lake group
 ```{r}
 data_lakes_env_class %>% 
@@ -161,7 +114,7 @@ data_lakes_env_class %>% count(class) %>% kable() %>% kable_styling()
 
 
 
-# Results
+
 ## Env conditions within scenarios
 ```{r}
 data_lakes_env_classfuture<-data_lakes_env_class
@@ -467,36 +420,6 @@ knitr::kable(left_join(Nspaclakclass, Nspaclakclass_all, by="class"), digits = 1
 
 
 
-### Chi square test
-```{r}
-#Observed vrs potential 
-OSRPSR<-left_join(Nspaclakclass, Nspecies_P_groupes, by="class") %>% select(-none)
-samp<-as.data.frame(OSRPSR)
-samp2 <- samp[,-1]
-rownames(samp2) <- samp[,1]
-
-
-olig<-samp2[c(1,6)]
-chi<-chisq.test(olig)
-chi
-
-mesot<-samp2[c(2,5)]
-chim<-chisq.test(mesot)
-chim
-
-eutro<-samp2[c(3,4)]
-chie<-chisq.test(eutro)
-chie
-
-
-
-samp3<- as.data.frame(left_join(Nspaclakclass_all,Nspecies_P_groupes_all, by="class"))
- samp4 <- samp3[,-1]
-rownames(samp4) <- samp3[,1]
- chiall<-chisq.test(samp4)
-chiall
-```
-
 
 ### FIG2 : DDG  
 
@@ -620,7 +543,7 @@ A3<-lakesDDG %>%
 
 
 ```
-##### Fig2 plot
+
 ```{r, fig.height=8, fig.width=6.5}
 FIG2<-((A2/A1) / A3) +theme(legend.position = "bottom")+ 
   labs(col="Spec. group") + 
@@ -658,7 +581,7 @@ lakesDDG %>%
 
 
 
-#### DDG for summary figure
+### FIG5 - part: DDG
 
 ```{r, fig.height=3, fig.width=7}
 Fig5_part<-lakesDDG %>%
@@ -1113,7 +1036,7 @@ knitr::kable(all_diff_prsabsMEAN_e %>%
 
 
 
-#### FIG3
+#### FIG3 : Scenarios
 ```{r}
 #PANEL B TURB/NUTR
 scentunutlabel<-c(TurbNutm1="-25%",TurbNut1="+25%")#
@@ -1409,7 +1332,7 @@ Fig3C<-all_diff_presabs_tobase %>%
 ```
 
 
-###### plot
+
 ```{r, fig.height=8.0, fig.width=6.5}
 #COMBINE PLOTS
 FIG3fin<-((Fig3A + xlab(""))/ 
@@ -1438,307 +1361,11 @@ FIG3fin
 
 
 
-#### Win and Lost of species
-
-Alte Analyse, die cih hier mal lasse, weil sie nett ist. 
-
-
-```{r, fig.height=10}
-
-scen.labs <- c("S0_m1", "base"," S0_1", "SO_2", "S1_m1", "S1_0", "S1_1","S1_2", "S2_m1 *", 
-               "S2_0", "S2_1 *","S2_2")
-
-scen.labs.Turb <- c("TurbNutr_m1","TurbNutr_0","TurbNutr_1","TurbNutr_2")
-names(scen.labs.Turb)<- c("TurbNutr_m1","TurbNutr_0","TurbNutr_1","TurbNutr_2")
-
-names(scen.labs) <- c("S0_m1minusBase", "base","S0_1minusBase", "S0_2minusBase", 
-                      "S1_m1minusBase", "S1_0minusBase", "S1_1minusBase", "S1_2minusBase", 
-                      "S2_m1minusBase", "S2_0minusBase", "S2_1minusBase", "S2_2minusBase")
-presabs.labs <- c("Loss", "Increase")
-names(presabs.labs) <- c("-1", "1")
-
-scen2.labs <- c("S2_m1 *", "S2_N0_Tm1"," S2_N1_Tm1", 
-                "S2_Nm1_T0", "S2_0", "S2_N1_T0", 
-                "S2_Nm1_T1","S2_N0_T1", "S2_1 *")
-names(scen2.labs) <- c("S2_m1minusS2_0",
-      "S2_N0_Tm1minusS2_0",
-      "S2_N1_Tm1minusS2_0",
-      "S2_Nm1_T0minusS2_0",
-      "S2_0",
-      "S2_N1_T0minusS2_0",
-      "S2_Nm1_T1minusS2_0",
-      "S2_N0_T1minusS2_0",
-      "S2_1minusS2_0")
-
-annotate_background <- tibble(
-  scenario = scen.labs,
-  color = "blue",
-  variable = -2
-)
-
-
-Nspec_base_perdepth <-all_diff_presabs_tobase %>%
-  group_by(lakeID, variable) %>%
-  summarise(
-    base = sum(base),
-    S0_m1 = sum(S0_m1),
-    S0_1 = sum(S0_1),
-    S0_2 = sum(S0_2),
-    S1_m1 = sum(S1_m1),
-    S1_0 = sum(S1_0),
-    S1_1 = sum(S1_1),
-    S1_2 = sum(S1_2),
-    S2_m1 = sum(S2_m1),
-    S2_0 = sum(S2_0),
-    S2_1 = sum(S2_1),
-    S2_2 = sum(S2_2)
-  ) %>% select(lakeID, variable, base)
-
-
-#IDEE: add line with mean change per depth and in total
-
-FigAll<-all_diff_presabs_tobase %>% # filter(S1minusBase!=0)%>%filter(S2minusBase!=0)%>%
-  gather("scenario", "PreAbsChange", c(16:32)) %>% # 4,
-  group_by(lakeID, variable, scenario) %>%
-  count(PreAbsChange) %>%
-  filter(PreAbsChange != 0) %>%
-  left_join(Nspec_base_perdepth, by=c("lakeID"="lakeID","variable"="variable")) %>%
-  ungroup() %>%
-  mutate(nPerc = (n/base)*100) %>%
-  add_row(scenario = "base", variable = c(-5.0)) %>%
-
-  mutate(scenarioTemp = 
-           ifelse(scenario=="S0_m1minusBase" | 
-                    scenario=="S0_1minusBase" |  
-                    scenario=="S0_2minusBase" | scenario=="base","Temp_0",
-           ifelse(scenario=="S1_m1minusBase" | scenario=="S1_1minusBase" | 
-                    scenario=="S1_2minusBase" | scenario=="S1_0minusBase","Temp_1",
-            ifelse(scenario=="S2_m1minusBase" | scenario=="S2_1minusBase" | 
-                     scenario=="S2_2minusBase" | scenario=="S2_0minusBase",
-                   "Temp_2","others"))
-                                )) %>%
-    mutate(scenarioTurbNut = 
-           ifelse(scenario=="S0_m1minusBase" | 
-                    scenario=="S1_m1minusBase" |  
-                    scenario=="S2_m1minusBase" ,"TurbNutr_m1",
-           ifelse(scenario=="base" | scenario=="S1_0minusBase" | 
-                    scenario=="S2_0minusBase" ,"TurbNutr_0",
-            ifelse(scenario=="S0_1minusBase" | scenario=="S1_1minusBase" | 
-                     scenario=="S2_1minusBase" ,
-                   "TurbNutr_1",
-                   ifelse(scenario=="S0_2minusBase" | scenario=="S1_2minusBase" | 
-                     scenario=="S2_2minusBase" ,
-                   "TurbNutr_2","others"))
-                                ))) %>%
-    transform(scenarioTurbNut = factor(
-    scenarioTurbNut,
-    levels = c(
-      "TurbNutr_m1",
-      "TurbNutr_0",
-      "TurbNutr_1",
-      "TurbNutr_2"
-    )
-  )) %>%
-  
-  filter(scenarioTemp!="NA") %>%
-  filter(scenarioTurbNut!="NA") %>%
-  ggplot(aes(
-    x = factor(variable),
-    y = n,
-    fill = factor(PreAbsChange)
-  )) +
-  facet_grid( scenarioTemp~scenarioTurbNut,
-              labeller = labeller(scenarioTurbNut = scen.labs.Turb)
-              #nrow = 3
-              ) +
-  geom_boxplot(aes()) +
-  ylab("species")+
-  scale_x_discrete(limits = rev) +
-  guides(fill = guide_legend(title = "Change")) +
-  scale_fill_manual(labels = c("looser", "winner"), #,"others","TempEffect","TurbNutrEffect"
-                    values = (WinnerLoserPalette))+ #,"white","mistyrose","cornsilk"
-  ggtitle(expression(decreasing %<-% Turbidity/Nutrients %->% increasing))+ 
-  theme(plot.title = element_text(size = 10,color = "grey50"))+
-  theme(legend.position = "bottom")+
-  scale_y_continuous(
-    sec.axis = dup_axis(name = expression(Temperature %->% increasing), breaks = NULL))+ 
-  theme(axis.title.y.right = element_text(size=10,color = "grey50"))+
-  xlab("Depth") +
-  ylab("Species number change")
-
-
-FigTurbNutr <- scenTurbNutr_diff_presabs_toZero %>% 
-    gather("scenario", "PreAbsChange", c(13:29)) %>% # 4,
-  group_by(lakeID, variable, scenario) %>%
-  count(PreAbsChange) %>%
-  filter(PreAbsChange != 0)%>%
-  ungroup() %>%
-  add_row(scenario = "S2_0", variable = c(-5.0)) %>%
-  #add_row(scenario = "blank1", variable = c(-5.0)) %>%
-  #add_row(scenario = "blank2", variable = c(-5.0)) %>%
-  #add_row(scenario = "blank3", variable = c(-5.0)) %>%
-
-  mutate(scenarioTurb = 
-           ifelse(scenario=="S2_Nm1_T0minusS2_0" | scenario=="S2_0" |
-                    scenario=="S2_N1_T0minusS2_0","Turb_0",
-                         ifelse(scenario=="S2_m1minusS2_0" | scenario=="S2_N0_Tm1minusS2_0" |
-                                  scenario=="S2_N1_Tm1minusS2_0","Turb_m1",
-                                ifelse(scenario=="S2_Nm1_T1minusS2_0" |
-                                         scenario=="S2_N0_T1minusS2_0" |
-                                         scenario=="S2_1minusS2_0","Turb_1","others"))
-                                )) %>%
-    transform(scenarioTurb = factor(
-  scenarioTurb,
-    levels = c(
-      "Turb_m1", "Turb_0","Turb_1"
-      )
-  ))  %>%
-    mutate(scenarioNutr = 
-           ifelse(scenario=="S2_m1minusS2_0" | scenario=="S2_Nm1_T0minusS2_0" |
-                    scenario=="S2_Nm1_T1minusS2_0","Nutr_m1",
-                         ifelse(scenario=="S2_N0_Tm1minusS2_0" | scenario=="S2_0" |
-                                  scenario=="S2_N0_T1minusS2_0","Nutr_0",
-                                ifelse(scenario=="S2_N1_Tm1minusS2_0" |
-                                         scenario=="S2_N1_T0minusS2_0" |
-                                         scenario=="S2_1minusS2_0","Nutr_1","others"))
-                                )) %>%
-  transform(scenarioNutr = factor(
-  scenarioNutr,
-    levels = c(
-      "Nutr_m1", "Nutr_0","Nutr_1"
-      )
-  ))  %>%
-  filter(scenarioNutr!="NA") %>%
-  filter(scenarioTurb!="NA") %>%
-  ggplot(aes(x = factor(variable), y = n, fill = factor(PreAbsChange))) +
-  geom_boxplot(aes()) +
-  ylab("species") +
-  facet_grid(scenarioTurb~scenarioNutr #, nrow = 3,labeller = labeller(scenario = scen2.labs)
-             ) +
-  scale_x_discrete(limits = rev) +
-  xlab("Depth") +
-  ylab("Species mumber change") + ylim(0,40) +
-  guides(fill = guide_legend(title = "Change")) +
-  scale_y_continuous(
-    sec.axis = dup_axis(name = expression(decreasing %<-% Turbidity %->% increasing), 
-                        breaks = NULL))+ 
-  theme(axis.title.y.right = element_text(size=10,color = "grey50"))+
-    ggtitle(expression(decreasing %<-% Nutrients %->% increasing))+ 
-  theme(plot.title = element_text(size = 10,color = "grey50"))+
-  scale_fill_manual(labels = c("looser", "winner"), 
-                               values = (WinnerLoserPalette))+
-  theme(legend.position = "bottom")
-
-
-FIG3<-FigAll / (FigTurbNutr+plot_spacer()+ 
-  plot_layout(widths = c(3, 1)))  & theme(legend.position = "bottom")
-FIG3+ 
-  plot_annotation(tag_levels = 'A') + 
-  plot_layout(guides = "collect")
-
-```
-
-
 
 
 ## Q3 - Traits Winner / Loser
 
-
-### S2_m1 and S2_1
-```{r}
-# WinnerLoserTraitsS2_1_S2_m1_all<-all_diff_presabs_tobase %>% 
-#   #mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligo",
-#   #                        ifelse(speciesID %in% c(15001:15300), "meso",
-#   #                               ifelse(speciesID %in% c(16001:16300), "eu",NA)))) %>%
-#   select(speciesID,lakeID, variable,base,
-#          S2_1,S2_m1) %>%
-#   group_by(speciesID, lakeID) %>% #to make it independent from depth
-#   summarise(S2_1=sum(S2_1),
-#             S2_m1=sum(S2_m1),
-#             base=sum(base)) %>%
-#   mutate(S2_1=ifelse(S2_1>0,1,0),
-#          S2_m1=ifelse(S2_m1>0,1,0),
-#          base=ifelse(base>0,1,0)) %>%
-#   mutate(S2_1minusBase=S2_1 - base,
-#          S2_m1minusBase=S2_m1 - base) %>%
-#   ungroup() %>%
-#   
-#   group_by(speciesID) %>%
-#   summarise(lakeWinLostS2_1 = sum(S2_1minusBase),
-#             lakeWinLostS2_m1 = sum(S2_m1minusBase)) %>%
-#     mutate(lakeWinLostS2_1=ifelse(lakeWinLostS2_1>0,1,
-#                             ifelse(lakeWinLostS2_1<0,-1,0)),
-#            lakeWinLostS2_m1=ifelse(lakeWinLostS2_m1>0,1,
-#                             ifelse(lakeWinLostS2_m1<0,-1,0))) %>%
-#   left_join(data_spec_para, by=c("speciesID"="specNr")) %>%
-#   #gather("parameter","value",c(5,7:24)) %>%
-#   select(-tuberEndAge, -Group)%>%
-#   gather("Scenario","WinLost",2:3) 
-# 
-# 
-# data.glmS2_1  <- WinnerLoserTraitsS2_1_S2_m1_all %>% 
-#   filter(Scenario=="lakeWinLostS2_1") %>%
-#   filter(WinLost!=0) %>%
-#   mutate(WinLost=factor(WinLost)) %>%
-#   select(-speciesID,-Scenario) %>%
-#   #spread(parameter,value)%>%
-#   ungroup() %>%
-#   as.data.frame() %>%
-#   mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-# 
-# modSpaceS2_1 <- glm(formula = factor(WinLost)~ . ,data=data.glmS2_1[,-c(1)], family = binomial())
-# 
-# #summary(modSpaceS2_1)
-# glmSpace2_1 <- drop1(modSpaceS2_1, test="Chisq")
-# 
-# #glmSpace2_1
-# 
-# #tab_model(modSpace)
-# 
-# T2_1<-plot_model(modSpaceS2_1, show.values = TRUE, 
-#            value.offset = .3, digits=1,sort.est = F,
-#            title = "S2_1: Losers - Winners",
-#            rm.terms = c("germinationDay", "heightMax", "hPhotoTemp","maxAge","pPhotoTemp",
-#                         "rootShootRatio","seedBiomass","seedsEndAge","seedsStartAge")) #, 
-# 
-# # other szenario
-# data.glmS2_m1  <- WinnerLoserTraitsS2_1_S2_m1_all %>% 
-#   filter(Scenario=="lakeWinLostS2_m1") %>%
-#   filter(WinLost!=0) %>%
-#   mutate(WinLost=factor(WinLost)) %>%
-#   select(-speciesID,-Scenario) %>%
-#   #spread(parameter,value)%>%
-#   ungroup() %>%
-#   as.data.frame() %>%
-#   mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-# 
-# modSpaceS2_m1 <- glm(formula = factor(WinLost)~ . ,data=data.glmS2_m1[,-c(1)], family = binomial())
-# 
-# #summary(modSpaceS2_m1)
-# glmSpace2_m1 <- drop1(modSpaceS2_m1, test="Chisq")
-# 
-# #glmSpace2_m1
-# 
-# #tab_model(modSpace)
-# 
-# T2_m1<-plot_model(modSpaceS2_m1, show.values = TRUE, 
-#            value.offset = .3, digits=1,sort.est = F,
-#            title = "Traits of Losers - Winners",
-#            rm.terms = c("germinationDay", "heightMax", "hPhotoTemp","maxAge","pPhotoTemp",
-#                         "rootShootRatio","seedBiomass","seedsEndAge","seedsStartAge")) #, 
-# 
-# (T2_m1+
-#     labs(subtitle = "A - S2_m1")) + (T2_1+
-#   theme(axis.title.y=element_blank(),
-#         axis.text.y=element_blank(),
-#         axis.ticks.y=element_blank())+
-#     labs(subtitle = "B - S2_1", title="")) #+ plot_annotation(tag_levels = 'A')
-```
-
-
-### S0_m1 and S0_1
-
-#### ALL (FIG4)
+### FIG4
 
 ```{r}
 WinnerLoserTraitsS0_1_S0_m1_all<-all_diff_presabs_tobase %>% 
@@ -1842,35 +1469,6 @@ Fig4fin
 
 
 
-#### S0_1
-```{r, fig.width=4, fig.height=5}
-
-data.glmS0_1  <- WinnerLoserTraitsS0_1_S0_m1_all %>% 
-  filter(Scenario=="lakeWinLostS0_1") %>%
-  filter(WinLost!=0) %>%
-  mutate(WinLost=factor(WinLost)) %>%
-  select(-speciesID,-Scenario) %>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-
-modSpaceS0_1 <- glm(formula = factor(WinLost)~ . ,data=data.glmS0_1[,-c(1)], family = binomial())
-toselect.S0_1 <- summary(modSpaceS0_1)$coeff[-1,4] < 0.05
-relevant.S0_1 <- names(toselect.S0_1)[toselect.S0_1 == TRUE] 
-
-relevant <- c(relevant.S0_1) %>% unique()
-
-
-
-T0_1_all<-plot_model(modSpaceS0_1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "S0_1: Losers - Winners",
-           terms = relevant, vline.color = "red") #,
-
-
-(T0_1_all+
-    labs(subtitle = "A - S0_m1")) #+ plot_annotation(tag_levels = 'A')
-```
 
 
 
@@ -1908,325 +1506,5 @@ NWinnerLoserS0_1 %>% left_join(NWinnerLoserS0_m1, by="WinLost")
 
 
 
-#### DEEP depth 
-```{r}
-WinnerLoserTraitsS0_1_S0_m1_dd<-all_diff_presabs_tobase %>% 
-  filter(variable=="-3" | variable=="-5")%>%
-  select(speciesID,lakeID, variable,base, S0_1,S0_m1) %>%
-  group_by(speciesID, lakeID) %>% #to make it independent from depth
-  summarise(S0_1=sum(S0_1),
-            S0_m1=sum(S0_m1),
-            base=sum(base)) %>%
-  mutate(S0_1=ifelse(S0_1>0,1,0),
-         S0_m1=ifelse(S0_m1>0,1,0),
-         base=ifelse(base>0,1,0)) %>%
-  mutate(S0_1minusBase=S0_1 - base,
-         S0_m1minusBase=S0_m1 - base) %>%
-  ungroup() %>%
-  
-  group_by(speciesID) %>%
-  summarise(lakeWinLostS0_1 = sum(S0_1minusBase),
-            lakeWinLostS0_m1 = sum(S0_m1minusBase)) %>%
-  mutate(lakeWinLostS0_1=ifelse(lakeWinLostS0_1>0,1,
-                            ifelse(lakeWinLostS0_1<0,-1,0)),
-           lakeWinLostS0_m1=ifelse(lakeWinLostS0_m1>0,1,
-                            ifelse(lakeWinLostS0_m1<0,-1,0))) %>%
-  left_join(data_spec_para, by=c("speciesID"="specNr")) %>%
-  select(-tuberEndAge, -Group)%>%
-  gather("Scenario","WinLost",2:3) 
-
-
-data.glmS0_1_deep  <- WinnerLoserTraitsS0_1_S0_m1_dd %>% 
-  filter(Scenario=="lakeWinLostS0_1") %>%
-  filter(WinLost!=0) %>%
-  mutate(WinLost=factor(WinLost)) %>%
-  select(-speciesID,-Scenario) %>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-
-modSpaceS0_1_deep <- glm(formula = factor(WinLost)~ . ,data=data.glmS0_1_deep[,-c(1)], family = binomial())
-
-#summary(modSpaceS2_1)
-glmSpace0_1 <- drop1(modSpaceS0_1_deep, test="Chisq")
-
-#glmSpace2_1
-
-# other szenario
-data.glmS0_m1_deep  <- WinnerLoserTraitsS0_1_S0_m1_dd %>% 
-  filter(Scenario=="lakeWinLostS0_m1") %>%
-  filter(WinLost!=0) %>%
-  mutate(WinLost=factor(WinLost)) %>%
-  select(-speciesID,-Scenario) %>%
-  #spread(parameter,value)%>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-
-modSpaceS0_m1 <- glm(formula = factor(WinLost)~ . , 
-                     data=data.glmS0_m1_deep[,-c(1)], family = binomial())
-
-
-#summary(modSpaceS2_m1)
-glmSpace0_m1 <- drop1(modSpaceS0_m1, test="Chisq")
-
-#glmSpace2_m1
-
-#tab_model(modSpace)
-
-## Select relevant (siginificant) parameters
-toselect.S0_m1 <- summary(modSpaceS0_m1)$coeff[-1,4] < 0.05
-relevant.S0_m1 <- names(toselect.S0_m1)[toselect.S0_m1 == TRUE] 
-
-toselect.S0_1 <- summary(modSpaceS0_1)$coeff[-1,4] < 0.05
-relevant.S0_1 <- names(toselect.S0_1)[toselect.S0_1 == TRUE] 
-
-relevant <- c(relevant.S0_1,relevant.S0_m1) %>% unique()
-
-T0_m1_d<-plot_model(modSpaceS0_m1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "Traits of Losers - Winners",
-           terms=relevant) #, 
-
-T0_1_d<-plot_model(modSpaceS0_1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "S0_1: Losers - Winners",
-           terms = relevant) #,
-
-
-(T0_m1_d+
-    labs(subtitle = "A - S0_m1")) + (T0_1_d+
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())+
-    labs(subtitle = "B - S0_1", title="")) #+ plot_annotation(tag_levels = 'A')
-```
-
-
-#### SHALLOW depth
-
-```{r}
-WinnerLoserTraitsS0_1_S0_m1_ddd<-all_diff_presabs_tobase %>% 
-  filter(variable=="-1.5" | variable=="-0.5")%>%
-  select(speciesID,lakeID, variable,base, S0_1,S0_m1) %>%
-  group_by(speciesID, lakeID) %>% #to make it independent from depth
-  summarise(S0_1=sum(S0_1),
-            S0_m1=sum(S0_m1),
-            base=sum(base)) %>%
-  mutate(S0_1=ifelse(S0_1>0,1,0),
-         S0_m1=ifelse(S0_m1>0,1,0),
-         base=ifelse(base>0,1,0)) %>%
-  mutate(S0_1minusBase=S0_1 - base,
-         S0_m1minusBase=S0_m1 - base) %>%
-  ungroup() %>%
-  
-  group_by(speciesID) %>%
-  summarise(lakeWinLostS0_1 = sum(S0_1minusBase),
-            lakeWinLostS0_m1 = sum(S0_m1minusBase)) %>%
-  mutate(lakeWinLostS0_1=ifelse(lakeWinLostS0_1>0,1,
-                            ifelse(lakeWinLostS0_1<0,-1,0)),
-           lakeWinLostS0_m1=ifelse(lakeWinLostS0_m1>0,1,
-                            ifelse(lakeWinLostS0_m1<0,-1,0))) %>%
-  left_join(data_spec_para, by=c("speciesID"="specNr")) %>%
-  select(-tuberEndAge, -Group)%>%
-  gather("Scenario","WinLost",2:3) 
-
-
-data.glmS0_1_shallow  <- WinnerLoserTraitsS0_1_S0_m1_ddd %>% 
-  filter(Scenario=="lakeWinLostS0_1") %>%
-  filter(WinLost!=0) %>%
-  mutate(WinLost=factor(WinLost)) %>%
-  select(-speciesID,-Scenario) %>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-
-modSpaceS0_1 <- glm(formula = factor(WinLost)~ . ,data=data.glmS0_1_shallow[,-c(1)], family = binomial())
-
-#summary(modSpaceS2_1)
-glmSpace0_1 <- drop1(modSpaceS0_1, test="Chisq")
-
-#glmSpace2_1
-
-#tab_model(modSpace)
-
-# Will be ploted later
-# T0_1<-plot_model(modSpaceS0_1, show.values = TRUE, 
-#            value.offset = .3, digits=1,sort.est = F,
-#            title = "S0_1: Losers - Winners"#,
-#            #rm.terms = c("germinationDay", "heightMax", "hPhotoTemp","maxAge","pPhotoTemp",
-#           #              "rootShootRatio","seedBiomass","seedsEndAge","seedsStartAge")
-#            ) #, 
-
-# other szenario
-data.glmS0_m1_shallow  <- WinnerLoserTraitsS0_1_S0_m1_ddd %>% 
-  filter(Scenario=="lakeWinLostS0_m1") %>%
-  filter(WinLost!=0) %>%
-  mutate(WinLost=factor(WinLost)) %>%
-  select(-speciesID,-Scenario) %>%
-  #spread(parameter,value)%>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-WinLost), normalize, method="range",range = c(0, 1))
-
-modSpaceS0_m1 <- glm(formula = factor(WinLost)~ . , 
-                     data=data.glmS0_m1_shallow[,-c(1)], family = binomial())
-
-
-#summary(modSpaceS2_m1)
-glmSpace0_m1 <- drop1(modSpaceS0_m1, test="Chisq")
-
-#glmSpace2_m1
-
-#tab_model(modSpace)
-
-## Select relevant (siginificant) parameters
-toselect.S0_m1 <- summary(modSpaceS0_m1)$coeff[-1,4] < 0.05
-relevant.S0_m1 <- names(toselect.S0_m1)[toselect.S0_m1 == TRUE] 
-
-toselect.S0_1 <- summary(modSpaceS0_1)$coeff[-1,4] < 0.05
-relevant.S0_1 <- names(toselect.S0_1)[toselect.S0_1 == TRUE] 
-
-relevant <- c(relevant.S0_1,relevant.S0_m1) %>% unique()
-
-T0_m1_s<-plot_model(modSpaceS0_m1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "Traits of Losers - Winners",
-           terms=relevant) #, 
-
-T0_1_s<-plot_model(modSpaceS0_1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "S0_1: Losers - Winners",
-           terms = relevant) #,
-
-
-(T0_m1_s+
-    labs(subtitle = "A - S0_m1")) + (T0_1_s+
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())+
-    labs(subtitle = "B - S0_1", title="")) #+ plot_annotation(tag_levels = 'A')
-```
-
-
-#### Deep and Shallow and All
-```{r, fig.height=8, fig.width=5}
-# ((T0_m1_s+
-#     labs(subtitle = "A - S0_m1 shallow")) + 
-#   (T0_1_s+
-#   theme(axis.title.y=element_blank(),
-#         axis.text.y=element_blank(),
-#         axis.ticks.y=element_blank())+
-#     labs(subtitle = "B - S0_1 shallow", title=""))) /
-#   ((T0_m1_d+
-#     labs(subtitle = "C - S0_m1 deep", title="")) + (T0_1_d+
-#   theme(axis.title.y=element_blank(),
-#         axis.text.y=element_blank(),
-#         axis.ticks.y=element_blank()))+
-#     labs(subtitle = "D - S0_1 deep", title=""))/
-#   ((T0_m1_all+
-#     labs(subtitle = "E - S0_m1 all depth", title="")) + (T0_1_all+
-#   theme(axis.title.y=element_blank(),
-#         axis.text.y=element_blank(),
-#         axis.ticks.y=element_blank()))+
-#     labs(subtitle = "F - S0_1 all depth", title=""))
-```
-
-#### Winner/Loser 
-```{r}
-# tw1<-data.glmS0_m1_deep %>% count(WinLost) %>%
-#   mutate(S0_m1_deep_P=(n/NSPECbase*100))%>% select(-n)
-# 
-# tw2<-data.glmS0_1_deep %>% count(WinLost) %>%
-#   mutate(S0_1_deep_P=(n/NSPECbase*100))%>% select(-n)
-# 
-# tw3<-data.glmS0_m1_shallow %>% count(WinLost) %>%
-#   mutate(S0_m1_sha_P=(n/NSPECbase*100))%>% select(-n)
-# 
-# tw4<-data.glmS0_1_shallow %>% count(WinLost) %>%
-#   mutate(S0_1_sha_P=(n/NSPECbase*100))%>% select(-n)
-# 
-# tw1 %>% left_join(tw2, by="WinLost")%>% left_join(tw3, by="WinLost")%>% 
-#   left_join(tw4, by="WinLost")
-```
-
-
-
-
-
-### S2_0
-```{r}
-WinnerLoserTraitsS2_0<-all_diff_presabs_tobase %>% 
-  #filter(variable=="-3" | variable=="-5")%>%
-  select(speciesID,lakeID, variable,base, S2_0) %>%
-  group_by(speciesID, lakeID) %>% #to make it independent from depth
-  summarise(S2_0=sum(S2_0),
-            base=sum(base)) %>%
-  mutate(S2_0=ifelse(S2_0>0,1,0),
-         base=ifelse(base>0,1,0)) %>%
-  mutate(S2_0minusBase=S2_0 - base) %>%
-  ungroup() %>%
-  
-  group_by(speciesID) %>%
-  summarise(lakeWinLostS2_0 = sum(S2_0minusBase)) %>%
-  mutate(lakeWinLostS2_0=ifelse(lakeWinLostS2_0>0,1,
-                            ifelse(lakeWinLostS2_0<0,-1,0))) %>%
-  left_join(data_spec_para, by=c("speciesID"="specNr")) %>%
-  select(-tuberEndAge, -Group)
-
-
-data.glmS2_0  <- WinnerLoserTraitsS2_0 %>% 
-  #filter(lakeWinLostS2_0!=0) %>%
-  mutate(lakeWinLostS2_0=factor(lakeWinLostS2_0)) %>%
-  select(-speciesID) %>%
-  ungroup() %>%
-  as.data.frame() %>%
-  mutate_at(vars(-Species,-lakeWinLostS2_0), normalize, method="range",range = c(0, 1))
-
-modSpaceS2_0 <- glm(formula = factor(lakeWinLostS2_0)~ . ,
-                    data=data.glmS2_0[,-2], family = binomial())
-
-#summary(modSpaceS2_0)
-glmSpace2_0 <- drop1(modSpaceS2_0, test="Chisq")
-
-#glmSpace2_0
-
-
-
-## Select relevant (siginificant) parameters
-toselect.S2_0 <- summary(modSpaceS2_0)$coeff[-1,4] < 0.05
-relevant.S2_0 <- names(toselect.S2_0)[toselect.S2_0 == TRUE] 
-
-relevant <- c(relevant.S0_1,relevant.S0_m1,relevant.S0_m1) %>% unique()
-
-
-T2_0_all<-plot_model(modSpaceS2_0, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "Traits of Losers - Winners",
-           terms=relevant) #, 
-
-T0_m1_all<-plot_model(modSpaceS0_m1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "Traits of Losers - Winners",
-           terms=relevant) #, 
-
-T0_1_all<-plot_model(modSpaceS0_1, show.values = TRUE, 
-           value.offset = .3, digits=1,sort.est = F,
-           title = "S0_1: Losers - Winners",
-           terms = relevant) #,
-
-
-(T0_m1_all+
-    labs(subtitle = "A - T&N decrease")) + (T0_1_all+
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())+
-    labs(subtitle = "B - T&N increase", title=""))+
-  (T2_0_all+
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())+
-    labs(subtitle = "C - Temp. increase", title=""))
-```
 
 
