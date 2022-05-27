@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-*This repository is a R package which includes all data (model output from MGM), analysis files and results to reproduce the following publications given in the Journal reference.*
+*This repository is a R package which includes all input data from MGM, output data from MGM, analysis files and results to reproduce the following publications given in the Journal reference.*
 
 
 ## Journal references
