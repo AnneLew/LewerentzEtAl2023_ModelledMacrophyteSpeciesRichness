@@ -1,13 +1,20 @@
-## code to prepare `DATASET` dataset goes here
+###### Code to prepare all datasets from raw-da
 
-usethis::use_data(DATASET, overwrite = TRUE)
+
+# Libraries ---------------------------------------------------------------
 
 library(tidyverse)
 library(data.table)
 
-# Model output data
-data_raw <-data.table::fread("data-raw/220303_random300grouped_reallakes_V4exp_300grouped_all_V4.csv")
 
+
+
+# Prepare MGM output base scenario ----------------------------------------
+
+# Read in
+data_raw <-data.table::fread("data-raw/MGMoutput/220303_random300grouped_reallakes_V4exp_300grouped_all_V4.csv")
+
+# Clean
 data <- data_raw %>%
   rename(Species = specName) %>%
   mutate(Biomass=depth_1+depth_2+depth_3+depth_4) %>% # REEVALUATE
@@ -16,13 +23,11 @@ data <- data_raw %>%
   rename(Lake = lakeName) %>% select(-"V1") %>%
   filter(Lake != "lake_11")
 
-# PARAMETERS for Lake and Species - if necessary output FOR FURTHER ANALYSIS
+# Extract environmental parameters of lakes
 data_lakes_env <-
   data %>% group_by(Lake) %>% select(
     "Lake",
     "latitude",
-    #"minI","maxI","iDelay","maxW","minW","minTemp",
-    #"tempDelay","minKd","levelCorrection"
     "maxNutrient",
     "maxTemp",
     "maxKd"
@@ -30,14 +35,11 @@ data_lakes_env <-
   select(where( ~ n_distinct(.) > 1))
 
 
-
-# fwrite(data_lakes_env, "Lakes_env_2.csv")
-#
+# Extract parameters of species
 data_spec_para <- data %>% group_by(Species) %>%
   select(
     -"Lake",
     -"lakeNr",-"latitude",
-    #-"minI",-"maxI",-"iDelay",-"minTemp",
     -"Name",-"maxNutrient",
     -"maxW",
     -"minW",
@@ -54,47 +56,18 @@ data_spec_para <- data %>% group_by(Species) %>%
   unique() %>%
   select(where( ~ n_distinct(.) > 1))
 
-
-
-# # fwrite(data_spec_para, "Species_parameters_2.csv")
-#
-#
-# # Optional: read in here
-# spec_para <-  data_spec_para
-# #fread(paste0(wd, "/2_Macroph/scenarios/species_parameters_2.csv"))
-# env_para_base <- data_lakes_env
-# #fread(paste0(wd, "/2_Macroph/scenarios/Lakes_env_2.csv"))
-# lakenames <- data_lakes_env
-# #fread(paste0(wd,"/scenarios/Lakes_env.csv"))
-#
-#
-# # List with names of species that can grow in base scenario
-# speciesBase <- data %>% filter(Biomass>0) %>% select(Species) %>% unique()
-# #data %>% select(Species) %>% unique()
-# # top50<-data %>%
-# #   mutate(Trophie = ifelse(specNr %in% c(14001:14300), "oligo",
-# #                           ifelse(specNr %in% c(15001:15300), "meso",
-# #                                  ifelse(specNr %in% c(16001:16300), "eu",NA)))) %>%
-# #   filter(Biomass>0) %>% select(Species,Trophie)%>% unique() %>%
-# #   group_by(Trophie) %>% slice_head(n=50) %>% ungroup() %>%select(Species)
-# # speciesBase_Rest<-speciesBase[!speciesBase$Species %in% top50$Species]
-# # fwrite(speciesBase_Rest, "survSpec_Base_Rest_V4.csv")
-#
-# survSpec_para<- data %>% filter(Biomass>0) %>% group_by(specNr) %>%
-#   summarise_all(mean) %>%
-#   select(-lakeNr,-Species,-Lake,-Name)
-
 usethis::use_data(data, overwrite = TRUE)
 usethis::use_data(data_lakes_env, overwrite = TRUE)
 usethis::use_data(data_spec_para, overwrite = TRUE)
 
 
-## Preprocess todays real species distribution
-# # Read in raw data
-MacrophData_raw<-fread("data-raw/Makrophyten_WRRL_05-17_nurMakrophytes.csv")
 
-## Filter data ----
-### For complete datasets ----
+# Preprocess observed species distribution --------------------------------
+
+# Read in raw data
+MacrophData_raw<-fread("data-raw/observed/Makrophyten_WRRL_05-17_nurMakrophytes.csv")
+
+# Filter data For complete datasets
 MacrophData <- MacrophData_raw %>%
   filter(!(Gewässer=="Chiemsee" & (YEAR==2011))) %>%
   filter(!(Gewässer=="Chiemsee" & YEAR==2012)) %>% # 1 plot per year -> wrong
@@ -110,33 +83,31 @@ MacrophData <- MacrophData_raw %>%
   filter(!(Gewässer=="Weitsee" & (YEAR==2017))) %>%
   distinct()
 
-### Rename depth ----
+# Rename depth
 MacrophData$Probestelle <- plyr::revalue(MacrophData$Probestelle, c("0-1 m"="0-1", "1-2 m"="1-2", "2-4 m"="2-4",">4 m"="4-x" ))
 
-### Selection of species that were determined until species level ----
+# Selection of species that were determined until species level
 MacrophData <- MacrophData %>%
   filter(str_detect(Taxon, " ")) %>%
   filter(Taxon != "Ranunculus, aquatisch")
 
-### Reduce columns
-MacrophData <- MacrophData %>% select(-`Mst.-Name`,-`DV-Nr.`,-Dimension, -CF, -LAKE_TYPE_SIMPLIFIED, -LAKE_TYPE2, -LAKE_TYPE)
+# Reduce columns
+MacrophData <- MacrophData %>%
+  select(-`Mst.-Name`,-`DV-Nr.`,-Dimension, -CF, -LAKE_TYPE_SIMPLIFIED, -LAKE_TYPE2, -LAKE_TYPE)
 
 
-
-## Dataset with all possible PLOTS ----
+# Create Dataset with all possible PLOTS
 Makroph_dataset <- MacrophData %>% group_by(Gewässer, MST_NR, YEAR) %>%
   select(Gewässer, MST_NR, YEAR) %>% #3590 * Gew?sser, MST_NR, YEAR, Probestelle IIII 1013 *4 => 4052 m?sstens eigentlich mind sein
   distinct()
 Probestelle <- tibble(Probestelle=c("4-x","0-1","1-2", "2-4")) # tibble(Probestelle)
 Makroph_dataset <- merge(Makroph_dataset, Probestelle, by=NULL) #996 * 4 = 3984
 
-## Select for submerged species ----
+# Select for submerged species
 Makroph_comm_S2 <- MacrophData %>% #group_by(Gewässer, MST_NR, DATUM, Probestelle, Taxon) %>%
   filter(Form=="S") %>%
   filter(Erscheinungsform!="Bryophyta" ) %>%
   filter(Erscheinungsform!="Pteridophyta" ) %>%
-
-  #ungroup()%>%
   group_by(Gewässer, MST_NR, Probestelle, YEAR, Taxon) %>%
   summarise(Messwert = mean(Messwert)) %>% #get rid of double values for DATUM
   select(Gewässer, MST_NR, YEAR, Probestelle, Taxon, Messwert) %>%  #duplicated %>% which %>% #check for duplications
@@ -144,7 +115,7 @@ Makroph_comm_S2 <- MacrophData %>% #group_by(Gewässer, MST_NR, DATUM, Probestel
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
   select_if(~sum(!is.na(.)) > 0)
 
-## Fill up dataset with all possible plots to have also zero values ----
+# Fill up dataset with all possible plots to have also zero values
 Makroph_comm_S <-  right_join(Makroph_comm_S2,
                               Makroph_dataset, by=c("Gewässer", "MST_NR", "YEAR", "Probestelle"))
 Makroph_comm_S$Tiefe <- plyr::revalue(Makroph_comm_S$Probestelle, c("0-1"="-0.5", "1-2"="-1.5", "2-4"="-3","4-x"="-5"))
@@ -153,7 +124,7 @@ Makroph_comm_S<-Makroph_comm_S%>%
   mutate_if(is.numeric, ~replace(., is.na(.), 0))%>%
   rename(Lake=Gewässer, Depth=Tiefe)
 
-## Calculate Gamma richness per depth
+# Calculate Gamma richness per depth
 Makroph_commLastYear <- Makroph_comm_S %>%
   group_by(Lake, YEAR,Depth) %>%
   summarise_at(vars(-"MST_NR", -"Probestelle"), mean, na.rm=T)%>%
@@ -162,31 +133,35 @@ Makroph_commLastYear <- Makroph_comm_S %>%
   #filter(YEAR==max(YEAR))%>%
   select(where(~ any(. != 0)))
 
-# fwrite(Makroph_commLastYear, "Makroph_commLastYear.csv")
-# fwrite(Makroph_comm_S, "Makroph_comm_S.csv")
-
+# Save output
 usethis::use_data(Makroph_comm_S, overwrite = TRUE)
 usethis::use_data(Makroph_commLastYear, overwrite = TRUE)
 
 
 
-## Species groups
-GroupsSpecies <- fread("data-raw/Indexmakrophyten_Gruppenzuordnung.csv")
+
+# Species groups ----------------------------------------------------------
+
+GroupsSpecies <- fread("data-raw/observed/Indexmakrophyten_Gruppenzuordnung.csv")
 
 GroupsSpecies$Taxon <- gsub(" ", ".", GroupsSpecies$Taxon)
 usethis::use_data(GroupsSpecies, overwrite = TRUE)
 
 
-# Lake morphology
-load("data-raw/Morphology.rda")
+
+# Lake morphology ---------------------------------------------------------
+
+load("data-raw/observed/Morphology.rda")
 usethis::use_data(Morphology, overwrite = TRUE)
 
 
 
-## Scenario data
 
-scenariofolder1<-"/data-raw/scenarios_V4_first50each/"
-scenariofolder2<-"/data-raw/scenarios_V4_Rest/"
+# Scenario data -----------------------------------------------------------
+
+# Read in
+scenariofolder1<-"/data-raw/MGMoutput/scenarios_V4_first50each/"
+scenariofolder2<-"/data-raw/MGMoutput/scenarios_V4_Rest/"
 
 filenames1 <- list.files(path=paste0(here::here(),scenariofolder1), pattern="*.txt", full.names=TRUE)
 filenames2 <- list.files(path=paste0(here::here(),scenariofolder2), pattern="*.txt", full.names=TRUE)
@@ -198,36 +173,35 @@ for (f in 2:length(filenames)){
   scenario_data <- rbind(scenario_data, read.table(filenames[f], header = T))
 }
 
-
 scenario_data <- scenario_data %>% filter(lakeID!=11)
 usethis::use_data(scenario_data, overwrite = TRUE)
 
 
-## Preprocess scenario data
-all_diff_tobase <- scenario_data %>%
-  group_by(speciesID,lakeID,variable)%>%
-  unique() %>% # ich weiß nicht warum
-  spread(scenario, value) %>%
-  mutate(
-    S0_m1minusBase = S0_m1 - base,
-    S0_1minusBase = S0_1 - base,
-    S0_2minusBase = S0_2 - base,
-    S1_m1minusBase = S1_m1 - base,
-    S1_0minusBase = S1_0 - base,
-    S1_1minusBase = S1_1 - base,
-    S1_2minusBase = S1_2 - base,
-    S2_m1minusBase = S2_m1 - base,
-    S2_0minusBase = S2_0 - base,
-    S2_1minusBase = S2_1 - base,
-    S2_2minusBase = S2_2 - base
-  )
-usethis::use_data(all_diff_tobase, overwrite = TRUE)
+# Preprocess scenario data
+# all_diff_tobase <- scenario_data %>%
+#   group_by(speciesID,lakeID,variable)%>%
+#   unique() %>% # ich weiß nicht warum
+#   spread(scenario, value) %>%
+#   mutate(
+#     S0_m1minusBase = S0_m1 - base,
+#     S0_1minusBase = S0_1 - base,
+#     S0_2minusBase = S0_2 - base,
+#     S1_m1minusBase = S1_m1 - base,
+#     S1_0minusBase = S1_0 - base,
+#     S1_1minusBase = S1_1 - base,
+#     S1_2minusBase = S1_2 - base,
+#     S2_m1minusBase = S2_m1 - base,
+#     S2_0minusBase = S2_0 - base,
+#     S2_1minusBase = S2_1 - base,
+#     S2_2minusBase = S2_2 - base
+#   )
+# usethis::use_data(all_diff_tobase, overwrite = TRUE)
 
 
 all_diff_presabs_tobase <- scenario_data %>%
   mutate_at(vars(value), ~ 1 * (. != 0)) %>%
   group_by(speciesID,lakeID,variable)%>%
-  unique() %>% # ich weiß nicht warum
+  unique() %>%
   spread(scenario, value) %>%
   mutate(
     S0_m1minusBase = S0_m1 - base,
@@ -245,43 +219,45 @@ all_diff_presabs_tobase <- scenario_data %>%
 usethis::use_data(all_diff_presabs_tobase, overwrite = TRUE)
 
 
-all_diff_presabs_TempEffect <- scenario_data %>%
-  mutate_at(vars(value), ~ 1 * (. != 0)) %>%
-  group_by(speciesID,lakeID,variable)%>%
-  unique() %>% # ich weiß nicht warum
-  spread(scenario, value) %>%
-  mutate(
-    S1_m1minS0_m1 = S1_m1 - S0_m1,
-    S1_0minBase = S1_0 - base,
-    S1_1minS0_1 = S1_1 - S0_1,
-    S1_2minS0_2 = S1_2 - S0_2,
-    S2_m1minS1_m1 = S2_m1 - S1_m1,
-    S2_0minS1_0 = S2_0 - S1_0,
-    S2_1minS1_1 = S2_1 - S1_1,
-    S2_2minS1_2 = S2_2 - S1_2
-  ) %>%
-  select(speciesID,lakeID,variable,S1_0minBase,S1_m1minS0_m1,S1_1minS0_1,S1_2minS0_2,
-         S2_m1minS1_m1,S2_0minS1_0,S2_1minS1_1,S2_2minS1_2)
-usethis::use_data(all_diff_presabs_TempEffect, overwrite = TRUE)
+# all_diff_presabs_TempEffect <- scenario_data %>%
+#   mutate_at(vars(value), ~ 1 * (. != 0)) %>%
+#   group_by(speciesID,lakeID,variable)%>%
+#   unique() %>% # ich weiß nicht warum
+#   spread(scenario, value) %>%
+#   mutate(
+#     S1_m1minS0_m1 = S1_m1 - S0_m1,
+#     S1_0minBase = S1_0 - base,
+#     S1_1minS0_1 = S1_1 - S0_1,
+#     S1_2minS0_2 = S1_2 - S0_2,
+#     S2_m1minS1_m1 = S2_m1 - S1_m1,
+#     S2_0minS1_0 = S2_0 - S1_0,
+#     S2_1minS1_1 = S2_1 - S1_1,
+#     S2_2minS1_2 = S2_2 - S1_2
+#   ) %>%
+#   select(speciesID,lakeID,variable,S1_0minBase,S1_m1minS0_m1,S1_1minS0_1,S1_2minS0_2,
+#          S2_m1minS1_m1,S2_0minS1_0,S2_1minS1_1,S2_2minS1_2)
+# usethis::use_data(all_diff_presabs_TempEffect, overwrite = TRUE)
 
 
-all_diff_prsabs_TurbEffect <- scenario_data %>%
-  mutate_at(vars(value), ~ 1 * (. != 0)) %>%
-  group_by(speciesID,lakeID,variable)%>%
-  unique() %>% # ich weiß nicht warum
-  spread(scenario, value) %>%
-  mutate(
-    S0_m1minBase = S0_m1 - base,
-    S0_1minBase = S0_1 - base,
-    S0_2minBase = S0_2 - base,
-    S1_m1minS1_0 = S1_m1 - S1_0,
-    S1_1minS1_0 = S1_1 - S1_0,
-    S1_2minS1_0 = S1_2 - S1_0,
-    S2_m1minS2_0 = S2_m1 - S2_0,
-    S2_1minS2_0 = S2_1 - S2_0,
-    S2_2minS2_0 = S2_2 - S2_0
-  )
-usethis::use_data(all_diff_prsabs_TurbEffect, overwrite = TRUE)
+# all_diff_prsabs_TurbEffect <- scenario_data %>%
+#   mutate_at(vars(value), ~ 1 * (. != 0)) %>%
+#   group_by(speciesID,lakeID,variable)%>%
+#   unique() %>% # ich weiß nicht warum
+#   spread(scenario, value) %>%
+#   mutate(
+#     S0_m1minBase = S0_m1 - base,
+#     S0_1minBase = S0_1 - base,
+#     S0_2minBase = S0_2 - base,
+#     S1_m1minS1_0 = S1_m1 - S1_0,
+#     S1_1minS1_0 = S1_1 - S1_0,
+#     S1_2minS1_0 = S1_2 - S1_0,
+#     S2_m1minS2_0 = S2_m1 - S2_0,
+#     S2_1minS2_0 = S2_1 - S2_0,
+#     S2_2minS2_0 = S2_2 - S2_0
+#   )
+# usethis::use_data(all_diff_prsabs_TurbEffect, overwrite = TRUE)
+
+
 # Process Nutrient / Turbidity scenarios
 scenTurbNutr_diff_presabs_toZero <- scenario_data %>%
   mutate_at(vars(value), ~ 1 * (. != 0)) %>%
@@ -301,7 +277,9 @@ scenTurbNutr_diff_presabs_toZero <- scenario_data %>%
 usethis::use_data(scenTurbNutr_diff_presabs_toZero, overwrite = TRUE)
 
 
-#### WHATEVER
+
+# Observed gamma richness -------------------------------------------------
+
 SPlength <- length(Makroph_commLastYear)-3
 Makroph_commLastYear$GAMMA <- vegan::specnumber(Makroph_commLastYear[,c(4:85)])
 
@@ -470,7 +448,8 @@ usethis::use_data(MAK_grouped_depthindep, overwrite = TRUE)
 usethis::use_data(MAK_mapped_grouped, overwrite = TRUE)
 
 
-## Lake clustering
+# Lake clustering ---------------------------------------------------------
+
 data_lakes_envscale<-scale(data_lakes_env[,-1] )
 
 distance = dist(data_lakes_envscale)
