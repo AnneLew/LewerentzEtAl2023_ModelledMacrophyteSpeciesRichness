@@ -1,5 +1,5 @@
 
-# Potential change in the future spatial distribution of submerged macrophyte species and species richness: the role of today's lake type and strength of compounded environmental change
+# Synergistic effects between global warming and water quality change on modelled macrophyte species richness 
 
 **Research Compendium**
 
