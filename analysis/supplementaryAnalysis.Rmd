@@ -1,7 +1,7 @@
 ---
 date: "`r Sys.Date()`"
 author: "Lewerentz, A. et al"
-title: "Potential change in the future spatial distribution of submerged macrophytes species and species richness: the role of today's lake type and strength of compounded environmental change"  
+title: "Synergistic effects between global warming and water quality change on modelled macrophyte species richness"  
 subtitle: "Supplementary material 2 - Additional analysis"
 output: 
   officedown::rdocx_document:
@@ -90,7 +90,7 @@ theme_set(theme_analysis())
 scale_colour_continuous <- scale_colour_viridis_c
 scale_colour_discrete   <- scale_colour_viridis_d
 scale_colour_binned     <- scale_colour_viridis_b
-
+ScenarioPalette <- c("#b39e84", "#b85c56","#7f388f")
 depthPalette <- carto_pal(5, "Teal")[2:5]
 TempPalette<- carto_pal(3, "Peach")
 TurbNutrPalette<- carto_pal(7, "Earth")[c(1:4)]
@@ -262,6 +262,40 @@ data_lakes_env_class %>%
 
 ```
 
+
+
+## Observed species
+```{r}
+Makroph_comm_S %>%
+  gather("Species", "Kohler",5:89) %>%
+  mutate(Species = str_replace(Species, " ", "."))%>%
+  left_join(GroupsSpecies, by = c("Species"="Taxon")) %>%
+  dplyr::select(-Trophie,-Typ) %>%
+  mutate(Gruppe = ifelse(is.na(Gruppe),"none", Gruppe)) %>%
+
+  group_by(Lake, YEAR,Depth, Species, Gruppe) %>%
+  summarise_at(vars(-"MST_NR", -"Probestelle"), mean, na.rm=T)%>% # Mean of Kohler per Lake, YEAR, Depth, Species and Group
+  ungroup() %>%
+  group_by(Lake) %>%
+  filter(YEAR==max(YEAR))%>% #select last mapping per lake
+  filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
+                      "Grosser Brombachsee",
+                      "Gruentensee","Igelsbachsee", "Kleiner Brombachsee",
+                      "Liebensteinspeicher","Rottachsee",
+                      "Steinberger See",
+                      "Untreusee","Walchensee","Murnersee","Rothsee",
+                      "Seehamer See")) %>%
+  filter(Gruppe!="none") %>% ungroup() %>%
+  filter(Kohler!=0) %>%
+  dplyr::select(Species, Lake) %>%
+  group_by(Species, Lake) %>%unique() %>% ungroup() %>% group_by(Species)%>%
+  summarise(nLakes=n())%>%
+  flextable() %>%
+  set_table_properties(layout = "autofit", width = .8) 
+  
+#%>% unique()
+```
+
 \newpage
 
 # Q1 - Base scenario
@@ -381,8 +415,12 @@ for (l in 1:10){
   
   p = (p1/p2/p3)  + plot_layout(guides = "collect")& 
     theme(legend.position = "bottom") & 
-  plot_annotation(tag_levels = 'A')
+  plot_annotation(tag_levels = 'a',
+                  tag_prefix = '(',
+                  tag_suffix = ')')
   print(p)
+  
+  ggsave(paste0("Fig_A",l,".png"),p, width = 6.5, height=8, dpi="print", bg="white", scale=1.2)
 }
 
 
@@ -434,6 +472,511 @@ for (l in 1:10){
 
 # Q2 - Future scenarios
 
+## Change of number of species
+```{r}
+lakeclasses<-c("clear lakes","intermediate lakes", "turbid lakes")
+names(lakeclasses)<-c("clear","medium","turb")
+#PANEL B TURB/NUTR
+scentunutlabel<-c(TurbNutm1="-25%",TurbNut1="+25%")#
+Fig3B<-all_diff_presabs_tobase %>% 
+  left_join(data_lakes_env_class %>% 
+              dplyr::select(Lake,class), by=c("lakeID"="Lake")) %>%
+  mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligotraphentic",
+                          ifelse(speciesID %in% c(15001:15300), "mesotraphentic",
+                                 ifelse(speciesID %in% c(16001:16300), "eutraphentic",NA))))%>%
+
+  group_by(lakeID, variable,Trophie, class) %>% 
+  summarise( #pro See und Tiefe Anzahl der Arten
+    base = sum(base),
+    S0m1 = sum(S0_m1),
+    S01 = sum(S0_1),
+    S02 = sum(S0_2),
+    S1m1 = sum(S1_m1),
+    S10 = sum(S1_0),
+    S11 = sum(S1_1),
+    S12 = sum(S1_2),
+    S2m1 = sum(S2_m1),
+    S20 = sum(S2_0),
+    S21 = sum(S2_1),
+    S22 = sum(S2_2)
+   ) %>%
+    mutate(
+    S0m1minusBaseP = (S0m1 - base),
+    S01minusBaseP = (S01 - base),
+    S02minusBaseP = (S02 - base),
+    S1m1minusBaseP = (S1m1- base),
+    S10minusBaseP = (S10 - base),
+    S11minusBaseP = (S11 - base),
+    S12minusBaseP = (S12 - base),
+    S2m1minusBaseP = (S2m1 - base),
+    S20minusBaseP = (S20 - base),
+    S21minusBaseP = (S21 - base),
+    S22minusBaseP = (S22 - base)
+  )%>% 
+  ungroup() %>%
+  group_by(variable,Trophie, class) %>% 
+  dplyr::select(-lakeID, -S0m1,-S01,-S02,-S1m1,-S10,-S11, -S12,-S2m1,-S20,-S21,-S22) %>%
+  summarise_all(list(mean=mean, sd=sd)) %>%
+  gather("scenario", "NSpec", c(5:15,17:27)) %>% 
+  mutate(type=str_extract(scenario,"[^_]+$"),
+         scenario=str_extract(scenario, "[^_]+")) %>%
+  spread(type, NSpec) %>%
+  
+  mutate(scenarioTemp = ifelse(scenario=="base" | scenario=="S01minusBaseP" | 
+                              scenario=="S02minusBaseP" | scenario=="S0m1minusBaseP", "Temp0", 
+                    ifelse(scenario=="S10minusBaseP" | scenario=="S11minusBaseP" | 
+                          scenario=="S12minusBaseP" | scenario=="S1m1minusBaseP", "Temp1",
+                    ifelse(scenario=="S20minusBaseP" | scenario=="S21minusBaseP" |
+                           scenario=="S22minusBaseP" | scenario=="S2m1minusBaseP",
+                           "Temp2",NA)))) %>%
+  mutate(scenarioTurbNut = ifelse(scenario=="base" | scenario=="S10minusBaseP" |
+                                  scenario=="S20minusBaseP", "TurbNut0", 
+                           ifelse(scenario=="S0m1minusBaseP" | scenario=="S1m1minusBaseP" |
+                                        scenario=="S2m1minusBaseP", "TurbNutm1",
+                           ifelse(scenario=="S01minusBaseP" | scenario=="S11minusBaseP" |
+                                               scenario=="S21minusBaseP", "TurbNut1",
+                           ifelse(scenario=="S02minusBaseP" | scenario=="S12minusBaseP" |
+                                                      scenario=="S22minusBaseP", 
+                                                    "TurbNut2", NA ))))) %>%
+  filter(scenarioTemp=="Temp0")%>%
+  filter(scenarioTurbNut!="TurbNut2")%>%
+
+  ggplot(aes(factor(variable),mean, 
+             group=interaction(Trophie, scenarioTemp)))+#, col=factor(Trophie
+    geom_point(aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  geom_path(alpha=0.5, aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  #geom_bar(stat="identity", aes(fill=factor(Trophie)), 
+  #         position = position_dodge(width=0.5),
+  #         width=0.5)+
+  geom_errorbar(aes(ymax=mean+sd,
+                    ymin=mean-sd,
+                    col=interaction(Trophie)),
+                position=position_dodge(width=0.5), width=.2)+
+  #geom_boxplot()+
+  facet_grid(scenarioTurbNut~class, 
+              labeller = labeller(class = lakeclasses,
+                                  scenarioTurbNut = scentunutlabel))+
+  ylab("Potential spec. \nrichness change (N)")+
+  theme(legend.position = "bottom")+
+  scale_color_manual(values=rev(TrophiePalette))+
+  theme(legend.title = element_blank())+
+  scale_x_discrete(limits=rev)+ 
+  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+  xlab("Depth (m)")+
+  scale_y_continuous(
+    sec.axis = dup_axis(name = expression(increase %<-% TurbNutr %->% decrease), 
+                        breaks = NULL))+ 
+  theme(axis.title.y.right = element_text(size=10,color = "grey50"))
+```
+
+```{r}
+#PANEL A TEMPERATURE
+scentemplabel<-c(Temp1="+1.5°C",Temp2="+3°C")#
+Fig3A<-all_diff_presabs_tobase %>% 
+  left_join(data_lakes_env_class %>% dplyr::select(Lake,class), by=c("lakeID"="Lake")) %>%
+  mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligotraphentic",
+                          ifelse(speciesID %in% c(15001:15300), "mesotraphentic",
+                                 ifelse(speciesID %in% c(16001:16300), "eutraphentic",NA))))%>%
+
+  group_by(lakeID, variable,Trophie, class) %>% 
+  summarise( #pro See und Tiefe Anzahl der Arten
+    base = sum(base),
+    S0m1 = sum(S0_m1),
+    S01 = sum(S0_1),
+    S02 = sum(S0_2),
+    S1m1 = sum(S1_m1),
+    S10 = sum(S1_0),
+    S11 = sum(S1_1),
+    S12 = sum(S1_2),
+    S2m1 = sum(S2_m1),
+    S20 = sum(S2_0),
+    S21 = sum(S2_1),
+    S22 = sum(S2_2)
+   ) %>%
+    mutate(
+    S0m1minusBaseP = (S0m1 - base),
+    S01minusBaseP = (S01 - base),
+    S02minusBaseP = (S02 - base),
+    S1m1minusBaseP = (S1m1- base),
+    S10minusBaseP = (S10 - base),
+    S11minusBaseP = (S11 - base),
+    S12minusBaseP = (S12 - base),
+    S2m1minusBaseP = (S2m1 - base),
+    S20minusBaseP = (S20 - base),
+    S21minusBaseP = (S21 - base),
+    S22minusBaseP = (S22 - base)
+  )%>% 
+  ungroup() %>%
+  group_by(variable,Trophie, class) %>% 
+  dplyr::select(-lakeID, -S0m1,-S01,-S02,-S1m1,-S10,-S11, -S12,-S2m1,-S20,-S21,-S22) %>%
+  summarise_all(list(mean=mean, sd=sd)) %>%
+  
+  
+  gather("scenario", "NSpec", c(5:15,17:27)) %>% 
+  mutate(type=str_extract(scenario,"[^_]+$"),
+         scenario=str_extract(scenario, "[^_]+")) %>%
+  spread(type, NSpec) %>%
+
+  
+  mutate(scenarioTemp = ifelse(scenario=="base" | scenario=="S01minusBaseP" | 
+                              scenario=="S02minusBaseP" | scenario=="S0m1minusBaseP", "Temp0", 
+                    ifelse(scenario=="S10minusBaseP" | scenario=="S11minusBaseP" | 
+                          scenario=="S12minusBaseP" | scenario=="S1m1minusBaseP", "Temp1",
+                    ifelse(scenario=="S20minusBaseP" | scenario=="S21minusBaseP" |
+                           scenario=="S22minusBaseP" | scenario=="S2m1minusBaseP",
+                           "Temp2",NA)))) %>%
+  mutate(scenarioTurbNut = ifelse(scenario=="base" | scenario=="S10minusBaseP" |
+                                  scenario=="S20minusBaseP", "TurbNut0", 
+                           ifelse(scenario=="S0m1minusBaseP" | scenario=="S1m1minusBaseP" |
+                                        scenario=="S2m1minusBaseP", "TurbNutm1",
+                           ifelse(scenario=="S01minusBaseP" | scenario=="S11minusBaseP" |
+                                               scenario=="S21minusBaseP", "TurbNut1",
+                           ifelse(scenario=="S02minusBaseP" | scenario=="S12minusBaseP" |
+                                                      scenario=="S22minusBaseP", 
+                                                    "TurbNut2", NA ))))) %>%
+
+  filter(scenarioTurbNut=="TurbNut0")%>%
+
+  ggplot(aes(factor(variable),mean, 
+             group=interaction(Trophie, scenarioTemp)))+#, col=factor(Trophie
+  geom_point(aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  geom_path(alpha=0.5, aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  #geom_bar(stat="identity", aes(fill=factor(Trophie)), 
+  #         position = position_dodge(width=0.5),
+  #         width=0.5)+
+  geom_errorbar(aes(ymax=mean+sd,
+                    ymin=mean-sd,
+                    col=interaction(Trophie)),
+                position=position_dodge(width=0.5), width=.2)+
+  #geom_boxplot()+
+  facet_grid(scenarioTemp~class, 
+              labeller = labeller(class = lakeclasses, 
+                                  scenarioTemp = scentemplabel))+
+  ylab("Potential spec. \nrichness change (N)")+
+  theme(legend.position = "bottom")+
+  scale_color_manual(values=rev(TrophiePalette))+
+  theme(legend.title = element_blank())+
+  scale_x_discrete(limits=rev)+ 
+  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+  xlab("Depth (m)") +
+  scale_y_continuous(limits=c(-5,20),breaks = seq(0, 20, 10),
+    sec.axis = dup_axis(name = expression(Temperature %->% increasing), 
+                        breaks = NULL))+ 
+  theme(axis.title.y.right = element_text(size=10,color = "grey50"),
+        legend.position = "bottom")
+```
+
+```{r, fig.height=7, fig.width=5}
+# #COMBINE PLOTS WITHOUT PANEL C
+# ((Fig3A + xlab(""))/ 
+#    (Fig3B)) + 
+#   plot_annotation(tag_levels = 'A')+ 
+#   #labs(col="Spec. group") + 
+#   plot_layout(heights = c(1, 3)) + 
+#   plot_layout(guides = "collect") &
+#   theme(legend.position = "bottom",                                              strip.text.x = element_text(size = 8),
+#                 strip.text.y = element_text(size = 10),
+#                 axis.text.x = element_text(angle = 90, 
+#                                            vjust = 0.5, hjust=1),
+#                 axis.title=element_text(size=10))
+```
+
+
+```{r}
+# PANEL C TRY Interactive effect of Temp and water quality
+Fig3C<-all_diff_presabs_tobase %>% 
+  left_join(data_lakes_env_class %>% dplyr::select(Lake,class), by=c("lakeID"="Lake")) %>%
+  mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligotraphentic",
+                          ifelse(speciesID %in% c(15001:15300), "mesotraphentic",
+                                 ifelse(speciesID %in% c(16001:16300), "eutraphentic",NA))))%>%
+
+  group_by(lakeID, variable,Trophie, class) %>% 
+  summarise( #pro See und Tiefe Anzahl der Arten
+    base = sum(base),
+    S0m1 = sum(S0_m1),
+    S01 = sum(S0_1),
+    S02 = sum(S0_2),
+    S1m1 = sum(S1_m1),
+    S10 = sum(S1_0),
+    S11 = sum(S1_1),
+    S12 = sum(S1_2),
+    S2m1 = sum(S2_m1),
+    S20 = sum(S2_0),
+    S21 = sum(S2_1),
+    S22 = sum(S2_2)
+   ) %>%
+    mutate(
+    S0m1minusBaseP = (S0m1 - base),
+    S01minusBaseP = (S01 - base),
+    S02minusBaseP = (S02 - base),
+    S1m1minusBaseP = (S1m1- base),
+    S10minusBaseP = (S10 - base),
+    S11minusBaseP = (S11 - base),
+    S12minusBaseP = (S12 - base),
+    S2m1minusBaseP = (S2m1 - base),
+    S20minusBaseP = (S20 - base),
+    S21minusBaseP = (S21 - base),
+    S22minusBaseP = (S22 - base)
+  )%>% 
+  mutate(S2m1IC = S2m1minusBaseP-(S0m1minusBaseP + S20minusBaseP),
+         S1m1IC = S1m1minusBaseP-(S0m1minusBaseP + S10minusBaseP),
+         S21IC = S21minusBaseP-(S01minusBaseP + S20minusBaseP),
+         S11IC = S11minusBaseP-(S01minusBaseP + S10minusBaseP)) %>%
+  
+  ungroup() %>%
+  group_by(variable,Trophie, class) %>% 
+  dplyr::select(class,Trophie,variable,S2m1IC,S1m1IC,S21IC,S11IC ) %>%
+  summarise_all(list(mean=mean, sd=sd)) %>%
+  
+  
+  gather("scenario", "NSpec", c(4:11)) %>% 
+  mutate(type=str_extract(scenario,"[^_]+$"),
+         scenario=str_extract(scenario, "[^_]+")) %>%
+  spread(type, NSpec) %>%
+  filter(scenario=="S2m1IC" | scenario=="S21IC")%>%
+  mutate(scenario=ifelse(scenario=="S2m1IC","+3°C\n-25%","+3°C\n+25%")) %>%
+
+  ggplot(aes(factor(variable),mean, 
+             group=interaction(Trophie)))+
+  geom_point(aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  geom_path(alpha=0.5, aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  geom_errorbar(aes(ymax=mean+sd,
+                    ymin=mean-sd,
+                    col=interaction(Trophie)),
+                position=position_dodge(width=0.5), width=.2)+
+  #geom_boxplot()+
+  facet_grid(scenario~class, 
+              labeller = labeller(class = lakeclasses))+
+  ylab("INTERACTIVE potential spec. \nrichness change (N)")+
+  theme(legend.position = "bottom")+
+  scale_color_manual(values=rev(TrophiePalette))+
+  theme(legend.title = element_blank())+
+  scale_x_discrete(limits=rev)+ 
+  geom_hline(yintercept=0, linetype="dashed", color = "red")+
+  xlab("Depth (m)") +
+  scale_y_continuous(limits=c(-10,10),
+                     breaks = seq(-10, 10, 10),
+    sec.axis = dup_axis(name = expression(decrease %<-% NutTurb %->% incr), 
+                        breaks = NULL))+ 
+  theme(axis.title.y.right = element_text(size=10,color = "grey50"),
+        legend.position = "bottom")#+
+  #ggtitle("Interactive effect of Temp increase (+3°C) and NutTurb in/decrease")
+```
+
+
+
+```{r, fig.height=8.0, fig.width=6.5, tab.cap="xxx", tab.id="scenarios_interaction"}
+#COMBINE PLOTS
+
+FIG3fin<-((Fig3A + xlab(""))/ 
+   (Fig3B + xlab("")) /
+   (Fig3C )) + 
+  plot_annotation(tag_levels = 'a',
+                  tag_prefix = '(',
+                  tag_suffix = ')')+ 
+  #labs(fill="Spec. group") + 
+  plot_layout(heights = c(1, 2, 1)) + 
+  plot_layout(guides = "collect")  &
+  theme(legend.position = "bottom",
+        strip.text.x = element_text(size = 8),
+                strip.text.y = element_text(size = 10),
+                axis.text.x = element_text(angle = 90, 
+                                           vjust = 0.5, hjust=1),
+                axis.title=element_text(size=10))& 
+  theme(plot.margin =  unit(c(-0.0, 0.2, -0.0, 0.2), "cm"),
+        plot.tag = element_text(size = 12))& 
+  guides(colour = guide_legend(override.aes = list(size=2)))
+
+FIG3fin
+
+#ggsave("Fig3.png", FIG3fin, width = 7, height=9, dpi="print", bg="white", scale=0.75)
+```
+
+
+ 
+```{r}
+# PANEL C Interactive effect of Temp and water quality: VERSION barplots
+Fig3Cnew3<-all_diff_presabs_tobase %>% 
+  left_join(data_lakes_env_class %>% dplyr::select(Lake,class), by=c("lakeID"="Lake")) %>%
+  mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligotraphentic",
+                          ifelse(speciesID %in% c(15001:15300), "mesotraphentic",
+                                 ifelse(speciesID %in% c(16001:16300), "eutraphentic",NA))))%>%
+
+  group_by(lakeID, variable,Trophie, class) %>% 
+  summarise( #pro See und Tiefe Anzahl der Arten
+    base = sum(base),
+    S0m1 = sum(S0_m1),
+    S01 = sum(S0_1),
+    S02 = sum(S0_2),
+    S1m1 = sum(S1_m1),
+    S10 = sum(S1_0),
+    S11 = sum(S1_1),
+    S12 = sum(S1_2),
+    S2m1 = sum(S2_m1),
+    S20 = sum(S2_0),
+    S21 = sum(S2_1),
+    S22 = sum(S2_2)
+   ) %>%
+    mutate(
+    S0m1minusBaseP = (S0m1 - base),
+    S01minusBaseP = (S01 - base),
+    S02minusBaseP = (S02 - base),
+    S1m1minusBaseP = (S1m1- base),
+    S10minusBaseP = (S10 - base),
+    S11minusBaseP = (S11 - base),
+    S12minusBaseP = (S12 - base),
+    S2m1minusBaseP = (S2m1 - base),
+    S20minusBaseP = (S20 - base),
+    S21minusBaseP = (S21 - base),
+    S22minusBaseP = (S22 - base)
+  )%>% 
+  mutate(#S2m1IC = S2m1minusBaseP-(S0m1minusBaseP + S20minusBaseP),
+         #S1m1IC = S1m1minusBaseP-(S0m1minusBaseP + S10minusBaseP),
+         S21IC = S21minusBaseP-(S01minusBaseP + S20minusBaseP)#,
+         #S11IC = S11minusBaseP-(S01minusBaseP + S10minusBaseP)
+         ) %>%
+  
+  ungroup() %>%
+  group_by(variable,class) %>% #Trophie, 
+  dplyr::select(class,variable,S21IC,#S11IC,S2m1IC,S1m1IC,Trophie,
+         #S2m1minusBaseP,S0m1minusBaseP,S20minusBaseP,
+         #S1m1minusBaseP,S10minusBaseP,
+         S21minusBaseP, S01minusBaseP,S20minusBaseP
+         #S11minusBaseP
+         ) %>%
+  summarise_all(list(mean=mean, sd=sd)) %>%
+  
+  gather("scenario", "NSpec", c(3:10)) %>% 
+  mutate(type=str_extract(scenario,"[^_]+$"),
+         scenario=str_extract(scenario, "[^_]+")) %>%
+  spread(type, NSpec) %>%
+  filter(scenario!="S21IC")%>% #scenario=="S2m1IC" | 
+    mutate(scenariosTYPE=ifelse(scenario=="S21IC","D",
+                         ifelse(scenario=="S21minusBaseP", "I",
+                                ifelse(scenario=="S20minusBaseP", "S",
+                                       ifelse(scenario=="S01minusBaseP","S","NA")
+                                       )))) %>%
+  mutate(scenario=ifelse(scenario=="S21IC","Int. +3°C\n+25%",
+                         ifelse(scenario=="S21minusBaseP", "+3°C\n+25%",
+                                ifelse(scenario=="S20minusBaseP", "+3°C\n+0%",
+                                       ifelse(scenario=="S01minusBaseP","+0°C\n+25%","NA")
+                                       )))) %>%
+
+  ggplot(aes(x=interaction(factor(scenariosTYPE), factor(variable)),
+             y=mean, fill=scenario,col=scenario, width=.8
+             ))+
+  geom_bar(stat="identity", position=position_stack())+ #dodge
+  facet_grid(~class, 
+              labeller = labeller(class = lakeclasses))+
+  geom_errorbar(aes(ymax=mean+sd,
+                    ymin=mean-sd,
+                    col=scenario),
+                position=position_dodge(.9))+
+  scale_color_manual(values=(ScenarioPalette))+
+  scale_fill_manual(values=(ScenarioPalette))+
+  theme(legend.position = "bottom")+
+  scale_x_discrete(limits=rev)+ 
+  geom_hline(yintercept=0, linetype="dashed", color = "black")+
+  theme(legend.title = element_blank())+
+  xlab("Depth (m)") +
+  #scale_y_continuous(limits=c(-50,50),breaks = seq(-60, 60, 20))+
+  ylab("Potential spec. \nrichness change (N)")
+
+Fig3Cnew3
+```
+
+```{r}
+# PANEL C TRY Interactive effect of Temp and water quality
+Fig3C<-all_diff_presabs_tobase %>% 
+  left_join(data_lakes_env_class %>% dplyr::select(Lake,class), by=c("lakeID"="Lake")) %>%
+  mutate(Trophie = ifelse(speciesID %in% c(14001:14300), "oligotraphentic",
+                          ifelse(speciesID %in% c(15001:15300), "mesotraphentic",
+                                 ifelse(speciesID %in% c(16001:16300), "eutraphentic",NA))))%>%
+
+  group_by(lakeID, variable,Trophie, class) %>% 
+  summarise( #pro See und Tiefe Anzahl der Arten
+    base = sum(base),
+    S0m1 = sum(S0_m1),
+    S01 = sum(S0_1),
+    S02 = sum(S0_2),
+    S1m1 = sum(S1_m1),
+    S10 = sum(S1_0),
+    S11 = sum(S1_1),
+    S12 = sum(S1_2),
+    S2m1 = sum(S2_m1),
+    S20 = sum(S2_0),
+    S21 = sum(S2_1),
+    S22 = sum(S2_2)
+   ) %>%
+    mutate(
+    S0m1minusBaseP = (S0m1 - base),
+    S01minusBaseP = (S01 - base),
+    S02minusBaseP = (S02 - base),
+    S1m1minusBaseP = (S1m1- base),
+    S10minusBaseP = (S10 - base),
+    S11minusBaseP = (S11 - base),
+    S12minusBaseP = (S12 - base),
+    S2m1minusBaseP = (S2m1 - base),
+    S20minusBaseP = (S20 - base),
+    S21minusBaseP = (S21 - base),
+    S22minusBaseP = (S22 - base)
+  )%>% 
+  mutate(S2m1IC = S2m1minusBaseP-(S0m1minusBaseP + S20minusBaseP),
+         S1m1IC = S1m1minusBaseP-(S0m1minusBaseP + S10minusBaseP),
+         S21IC = S21minusBaseP-(S01minusBaseP + S20minusBaseP),
+         S11IC = S11minusBaseP-(S01minusBaseP + S10minusBaseP)) %>%
+  
+  ungroup() %>%
+  group_by(variable,Trophie, class) %>% 
+  dplyr:: select(class,Trophie,variable,S2m1IC,S1m1IC,S21IC,S11IC ) %>%
+  summarise_all(list(mean=mean, sd=sd)) %>%
+  
+  
+  gather("scenario", "NSpec", c(4:11)) %>% 
+  mutate(type=str_extract(scenario,"[^_]+$"),
+         scenario=str_extract(scenario, "[^_]+")) %>%
+  spread(type, NSpec) %>%
+  filter(scenario=="S21IC")%>% #scenario=="S2m1IC" | 
+  mutate(scenario=ifelse(scenario=="S2m1IC","+3°C\n-25%","+3°C\n+25%")) %>%
+
+  ggplot(aes(factor(variable),mean, 
+             group=interaction(Trophie)))+
+  geom_point(aes(col=interaction(Trophie)),
+                position=position_dodge(width=0.5))+
+  #geom_path(alpha=0.5, aes(col=interaction(Trophie)),
+  #              position=position_dodge(width=0.5))+
+  geom_errorbar(aes(ymax=mean+sd,
+                    ymin=mean-sd,
+                    col=interaction(Trophie)),
+                position=position_dodge(width=0.5), width=.2)+
+  #geom_boxplot()+
+  facet_grid(scenario~class, 
+              labeller = labeller(class = lakeclasses))+
+  ylab("INTERACTIVE potential spec. \nrichness change (N)")+
+  theme(legend.position = "bottom")+
+  scale_color_manual(values=rev(TrophiePalette))+
+  theme(legend.title = element_blank())+
+  scale_x_discrete(limits=rev)+ 
+  geom_hline(yintercept=0, linetype="dashed", color = "black")+
+  xlab("Depth (m)") +
+  scale_y_continuous(limits=c(-10,10),
+                     breaks = seq(-10, 10, 10))+#,
+    #sec.axis = dup_axis(name = expression(decrease %<-% NutTurb %->% incr), 
+     #                   breaks = NULL))+ 
+  theme(axis.title.y.right = element_text(size=10,color = "grey50"),
+        legend.position = "bottom")#+
+  #ggtitle("Interactive effect of Temp increase (+3°C) and NutTurb in/decrease")
+```
+
+
+
+# Q3 - Traits Winner / Loser
 ```{r, tab.cap="Mean lake geographical parameters per lake group, increased turibity and nutrients", tab.id="lakeenv_m1"}
 # Environmental change within groups
 
@@ -866,8 +1409,12 @@ T2_0_all<-plot_model(modSpaceS2_0, show.values = TRUE,
 #            terms = relevant) #,
 
 
-T2_0_all+
-    labs(subtitle = "Temp. increase", title="")
+A11<-T2_0_all+
+    labs(subtitle = "Temp. increase", title="")+ 
+      labs(x="Species trait") + 
+  theme(axis.text = element_text(face = "italic"))
+
+ggsave(paste0("Fig_A11.png"),A11, width = 6.5, height=3.5, dpi="print", bg="white", scale=1.2)
 ```
 
 ```{r fig.cap="Winner and Loser traits under interactive scenario S2_m1 and S2_1", fig.id = "interacttraits"}
