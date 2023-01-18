@@ -547,6 +547,8 @@ Fig5_part<-lakesDDG %>%
 Fig5_part
 
 #ggsave("Fig5_part.png", Fig5_part, width = 6.5, height=3, dpi="print", bg="white")
+
+ggsave("Fig5_part.svg", Fig5_part, width = 6.5, height=3, dpi="print", bg="white")
 ```
 
 
@@ -1322,8 +1324,8 @@ FIG3fin<-((Fig3A + xlab(""))/
 
 FIG3fin
 
-ggsave("Fig3_f.png", FIG3fin, width = 7, height=10, dpi="print", bg="white", scale=0.75)
-ggsave("Fig3_f.svg", FIG3fin, width = 7, height=10, dpi="print", bg="white", scale=0.75)
+ggsave("Fig3.png", FIG3fin, width = 7, height=10, dpi="print", bg="white", scale=0.75)
+ggsave("Fig3.svg", FIG3fin, width = 7, height=10, dpi="print", bg="white", scale=0.75)
 
 ```
 
@@ -1438,6 +1440,8 @@ Fig4fin_red<-(T0_1_all+
     labs(subtitle = "Increased turbidity \nand nutrients (25%)", title="")) #+
 
 ggsave("Fig4.png", Fig4fin, width = 6.5, height=3.5, dpi="print", bg="white", scale =1.2)
+
+ggsave("Fig4.svg", Fig4fin, width = 6.5, height=3.5, dpi="print", bg="white", scale =1.2)
 ```
 
 

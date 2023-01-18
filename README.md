@@ -47,11 +47,11 @@ Source of raw data is:
 
 ## Installation
 
-You can install the development version of LewerentzEtAl2023ModelledMacrophyteApeciesRichness from [GitHub](https://github.com/) with:
+You can install the development version of LewerentzEtAl_2023ModelledMacrophyteApeciesRichness from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("AnneLew/LewerentzEtAl2023_modelled-macrophyte-species-richness")
+devtools::install_github("AnneLew/LewerentzEtAl2023_ModelledMacrophyteSpeciesRichness")
 ```
 
 
