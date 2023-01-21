@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, out.width = "
 # Methods and Setup 
 ## Load Packages 
 ```{r load packages, results='hide', message=FALSE}
-library(LewerentzEtAl2022)
+library(LewerentzEtAl2023ModelledMacrophyteSpeciesRichness)
 library(data.table)
 library(here)
 library(tidyverse)
