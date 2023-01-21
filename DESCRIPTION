@@ -8,11 +8,11 @@ Authors@R:
            role = c("aut", "cre"),
            email = "anne.lewerentz@kit.edu")
 Maintainer: The package maintainer <anne.lewerentz@kit.edu>
-Description: Data Analysis for LewerentzEtAl2023_modelled-macrophyte-species-richness
+Description: Data Analysis for Lewerentz et al. 2023 "Synergistic effects between global warming and water quality change on modelled macrophyte species richness"
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
-URL: https://github.com/AnneLew/LewerentzEtAl2022
-BugReports: https://github.com/AnneLew/LewerentzEtAl2022/issues
+URL: https://github.com/AnneLew/LewerentzEtAl2023_ModelledMacrophyteSpeciesRichness
+BugReports: https://github.com/AnneLew/LewerentzEtAl2023_ModelledMacrophyteSpeciesRichness/issues

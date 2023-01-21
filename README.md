@@ -13,10 +13,9 @@
 
 *Release 0.9* corresponds to a *Preprint*:
 
-- add citation
+- Anne Lewerentz, Markus Hoffmann, Thomas Hovestadt, et al. Potential change in the future spatial distribution of submerged macrophyte species and species richness: the role of today's lake type and strength of compounded environmental change. Authorea. May 31, 2022.
+DOI: 10.22541/au.165401091.12520929/v1
 
-
-## How to reproduce the results
 
 
 ## Data source
@@ -44,14 +43,20 @@ Source of raw data is:
 
 
 
+## How to reproduce the results
+### Installation
 
-## Installation
-
-You can install the development version of LewerentzEtAl_2023ModelledMacrophyteApeciesRichness from [GitHub](https://github.com/) with:
-
+To install the package in R follow this code:
 ``` r
-# install.packages("devtools")
+# install.packages("devtools") # install devtools if you don't have it already
 devtools::install_github("AnneLew/LewerentzEtAl2023_ModelledMacrophyteSpeciesRichness")
+library("LewerentzEtAl2023_ModelledMacrophyteSpeciesRichness")
 ```
 
-
+### Scripts
+To reproduce the results run the R scripts in the following order:
+| Order | Script Name                          | Description                                                                                                                                                                             |
+|-------|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1     | `data-raw/DATASET.R`                | Preparation of the datasets stored in folder *data* |
+| 2     | `analysis/analysis.Rmd`              | Reproduces figures, tables and analysis used in main manuscript                                                                                                                         |
+| 3     | `analysis/SupplementaryAnalysis.Rmd` | Reproduces figures, tables and analysis shown in SupplementaryMaterial                                                                                                                  |
