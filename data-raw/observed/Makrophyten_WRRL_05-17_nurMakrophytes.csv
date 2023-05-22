@@ -1,4 +1,4 @@
-Gewässer;Mst.-Name;MST_NR;DATUM;Probestelle;Form;DV-Nr.;Taxon;Dimension;Messwert;Erscheinungsform;CF;LAKE_TYPE;LAKE_TYPE_SIMPLIFIED;LAKE_TYPE2;YEAR
+Gewaesser;Mst.-Name;MST_NR;DATUM;Probestelle;Form;DV-Nr.;Taxon;Dimension;Messwert;Erscheinungsform;CF;LAKE_TYPE;LAKE_TYPE_SIMPLIFIED;LAKE_TYPE2;YEAR
 Abtsdorfer See;Schilff-FlÃ¤che am Nordwestufer, Seebichl, Transekt 1;31833;23.08.2006;0-1 m;Em;2022;Phragmites australis;HK1-5;4;Spermatophyta;0;2;Prealpine;2;2006
 Abtsdorfer See;Schilff-FlÃ¤che am Nordwestufer, Seebichl, Transekt 1;31833;23.08.2006;0-1 m;Em;2928;Carex elata;HK1-5;3;Spermatophyta;0;2;Prealpine;2;2006
 Abtsdorfer See;kleine Bucht am Westufer, zw. Fischer und Seebichl, Transekt 2;31834;23.08.2006;0-1 m;Em;2928;Carex elata;HK1-5;3;Spermatophyta;0;2;Prealpine;2;2006
@@ -1413,19 +1413,19 @@ Starnberger See;Transekt  012;121375;02.08.2017;0-1 m;Em;2022;Phragmites austral
 Starnberger See;Transekt  015;121384;02.08.2017;0-1 m;Em;2022;Phragmites australis;HK1-5;4;Spermatophyta;0;4;Alpine;4;2017
 Starnberger See;Transekt  030;121331;11.08.2008;1-2 m;Em;2022;Phragmites australis;HK1-5;1;Spermatophyta;0;4;Alpine;4;2008
 Starnberger See;Transekt  015;121384;13.08.2008;1-2 m;Em;2022;Phragmites australis;HK1-5;1;Spermatophyta;0;4;Alpine;4;2008
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;Em;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;Em;2075;Sparganium erectum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;Em;2075;Sparganium erectum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;0-1 m;Em;2075;Sparganium erectum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;Em;2075;Sparganium erectum;HK1-5;2;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2578;Typha latifolia;HK1-5;2;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2578;Typha latifolia;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;Em;2714;Lysimachia vulgaris;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;Em;2738;Juncus conglomeratus;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;Em;2841;Carex;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;0-1 m;Em;2977;Eleocharis acicularis;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;Em;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;Em;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Tachinger See;Transekt 1;96626;09.08.2006;0-1 m;Em;2022;Phragmites australis;HK1-5;4;Spermatophyta;0;3;Prealpine;3;2006
 Tachinger See;Transekt 2;96631;09.08.2006;0-1 m;Em;2022;Phragmites australis;HK1-5;4;Spermatophyta;0;3;Prealpine;3;2006
 Tachinger See;Transekt 3;96640;09.08.2006;0-1 m;Em;2025;Schoenoplectus lacustris;HK1-5;1;Spermatophyta;0;3;Prealpine;3;2006
@@ -2143,8 +2143,8 @@ Staffelsee - Sued;Transekt3_Westufer noerdl Ach_NSG;97149;19.07.2013;1-2 m;F-SB;
 Staffelsee - Sued;Transekt2a;120671;19.07.2016;1-2 m;F-SB;2021;Nuphar lutea;HK1-5;3;Spermatophyta;0;3;Prealpine;3;2016
 Staffelsee - Sued;Transekt3_Westufer noerdl Ach_NSG;97149;19.07.2016;1-2 m;F-SB;2021;Nuphar lutea;HK1-5;4;Spermatophyta;0;3;Prealpine;3;2016
 Staffelsee - Sued;Transekt3_Westufer noerdl Ach_NSG;97149;09.08.2010;2-4 m;F-SB;2021;Nuphar lutea;HK1-5;2;Spermatophyta;0;3;Prealpine;3;2010
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;F-SB;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;F-SB;2992;Sparganium emersum;HK1-5;2;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;F-SB;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;F-SB;2992;Sparganium emersum;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;F-SB;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Tachinger See;Transekt 7;96644;24.07.2012;>4 m;F-SB;2021;Nuphar lutea;HK1-5;3;Spermatophyta;0;3;Prealpine;3;2012
 Tachinger See;Transekt 1;96626;09.08.2006;0-1 m;F-SB;2021;Nuphar lutea;HK1-5;3;Spermatophyta;0;3;Prealpine;3;2006
@@ -18057,64 +18057,64 @@ Starnberger See;Transekt  019;121447;02.08.2017;2-4 m;S;2664;Potamogeton pusillu
 Starnberger See;Transekt  009;121372;16.07.2014;1-2 m;S;2284;Potamogeton x nitens;HK1-5;2;Spermatophyta;1;4;Alpine;4;2014
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;>4 m;S;12268;Warnstorfia fluitans;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;>4 m;S;2740;Juncus bulbosus;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;12268;Warnstorfia fluitans;HK1-5;2;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;0-1 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;S;2361;Persicaria hydropiper;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;2714;Lysimachia vulgaris;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;0-1 m;S;2714;Lysimachia vulgaris;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;0-1 m;S;2714;Lysimachia vulgaris;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;2;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2975;Glyceria fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2975;Glyceria fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2975;Glyceria fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;S;2991;Myriophyllum alterniflorum;HK1-5;2;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2991;Myriophyllum alterniflorum;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;0-1 m;S;2991;Myriophyllum alterniflorum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;0-1 m;S;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;0-1 m;S;2992;Sparganium emersum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;1-2 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;1-2 m;S;12268;Warnstorfia fluitans;HK1-5;2;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;1-2 m;S;12268;Warnstorfia fluitans;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;1-2 m;S;12268;Warnstorfia fluitans;HK1-5;2;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;1-2 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2194;Elatine triandra;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;1-2 m;S;2054;Sagittaria sagittifolia;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2194;Elatine triandra;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;1-2 m;S;2194;Elatine triandra;HK1-5;1;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;1-2 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;1-2 m;S;2194;Elatine triandra;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;4;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;1-2 m;S;2740;Juncus bulbosus;HK1-5;5;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;1-2 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;1-2 m;S;2977;Eleocharis acicularis;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;1-2 m;S;2977;Eleocharis acicularis;HK1-5;4;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2977;Eleocharis acicularis;HK1-5;2;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;1-2 m;S;2977;Eleocharis acicularis;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;1-2 m;S;2991;Myriophyllum alterniflorum;HK1-5;2;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;2-4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;2-4 m;S;12268;Warnstorfia fluitans;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Südufer;40577;18.08.2004;2-4 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt S?dufer;40577;18.08.2004;2-4 m;S;12268;Warnstorfia fluitans;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt SW-Ufer;40578;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt W- Ufer 100m sw v. letzten Steg der Segelschule;40579;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt Nordufer bei Segelclub ;40580;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;3;Spermatophyta;;0;0;-9;2004
-Steinberger See;Transekt Ostufer, 200m nördl. vom BRK Haus;40581;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;5;Spermatophyta;;0;0;-9;2004
+Steinberger See;Transekt Ostufer, 200m n?rdl. vom BRK Haus;40581;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;5;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;2-4 m;S;2740;Juncus bulbosus;HK1-5;5;Spermatophyta;;0;0;-9;2004
 Steinberger See;Transekt NO-Ufer bei Bootsverleih;40576;18.08.2004;2-4 m;S;2991;Myriophyllum alterniflorum;HK1-5;1;Spermatophyta;;0;0;-9;2004
 Tachinger See;Transekt 3;96640;09.08.2006;>4 m;S;7170;Chara contraria;HK1-5;1;Charales;0;3;Prealpine;3;2006

@@ -473,6 +473,62 @@ for (l in 1:10){
 
 ```
 
+
+## Check for relevance of emergent and floating-leaved species for mismatch between potential and observed species richness
+```{r}
+simul<-data %>% 
+  group_by(Lake) %>%
+  summarise_at(vars(depth_1, depth_2, depth_3, depth_4), ~ sum(. != 0)) %>%
+  gather("depth", "NSpec", c(2:5))%>%
+  mutate(NSpecP=(NSpec/NSPECbase)*100) %>% 
+  dplyr::select(-NSpec) %>%
+  mutate(type="model") %>% 
+  mutate(depth=ifelse(depth=="depth_1",-0.5,
+                                              ifelse(depth=="depth_2",-1.5,
+                                                     ifelse(depth=="depth_3",-3.0,
+                                                            ifelse(depth=="depth_4",-5.0,NA)))))  
+
+
+# compEFSB <- MAK_MAPPED_ALL %>% left_join(simul, by=join_by(LakeID == Lake, Depth == depth)) %>%
+#   ungroup() %>%
+#   dplyr::select(-type,-GAMMA_EFSB, -GAMMA_S) %>%
+#   gather("type","value",c(4,6,7)) 
+# 
+# compEFSB %>%
+#   ggplot(aes(x=factor(Depth),y=value,fill=type))+
+#   #geom_path()+
+#   scale_x_discrete(limits=rev)+
+#   geom_boxplot()
+
+
+```
+
+
+```{r}
+MAK_MAPPED_ALL %>% left_join(simul, by=join_by(LakeID == Lake, Depth == depth)) %>%
+  ungroup() %>%
+  dplyr::select(-type,-GAMMA_EFSB, -GAMMA_S) %>%
+  filter(LakeID!="lake_11") %>%
+  mutate(overunder = ifelse(GAMMAperc_S > NSpecP, "overestimation",
+                            ifelse(GAMMAperc_S < NSpecP, "underestimation","equal"))) %>% 
+  ggplot(aes(overunder,GAMMAperc_EFSB))+
+  geom_boxplot()+
+  xlab("Comparison Potential and Observed species richness")+
+  ylab("Number of emergent and floating-leaved species")
+
+
+
+# MAK_MAPPED_ALL %>% left_join(simul, by=join_by(LakeID == Lake, Depth == depth)) %>%
+#   ungroup() %>%
+#   dplyr::select(-type,-GAMMA_EFSB, -GAMMA_S) %>%
+#   filter(LakeID!="lake_11") %>%
+#   mutate(diff_potMINUSobs = GAMMAperc_S - NSpecP) %>%
+#   ggplot(aes(x=GAMMAperc_S,y=NSpecP, col=GAMMAperc_EFSB))+
+#   geom_point()
+```
+
+
+
 \newpage
 
 # Potential species richness: Future scenarios (Q2)

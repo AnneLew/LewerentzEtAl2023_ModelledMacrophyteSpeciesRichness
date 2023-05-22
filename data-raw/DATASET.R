@@ -69,18 +69,18 @@ MacrophData_raw<-fread("data-raw/observed/Makrophyten_WRRL_05-17_nurMakrophytes.
 
 # Filter data For complete datasets
 MacrophData <- MacrophData_raw %>%
-  filter(!(Gewässer=="Chiemsee" & (YEAR==2011))) %>%
-  filter(!(Gewässer=="Chiemsee" & YEAR==2012)) %>% # 1 plot per year -> wrong
-  filter(!(Gewässer=="Chiemsee" & (YEAR==2014))) %>%
-  filter(!(Gewässer=="Chiemsee" & (YEAR==2015))) %>%
-  filter(!(Gewässer=="Chiemsee" & (YEAR==2017))) %>%
-  filter(!(Gewässer=="Staffelsee - Sued" & (YEAR==2012))) %>%
-  filter(!(Gewässer=="Gr. Alpsee" & (YEAR==2012))) %>%
-  filter(!(Gewässer=="Gr. Alpsee" & (YEAR==2013))) %>%
-  filter(!(Gewässer=="Pilsensee" & (YEAR==2015))) %>%
-  filter(!(Gewässer=="Langbuergner See" & (YEAR==2014))) %>%
-  filter(!(Gewässer=="Pelhamer See" & (YEAR==2017))) %>%
-  filter(!(Gewässer=="Weitsee" & (YEAR==2017))) %>%
+  filter(!(Gewaesser=="Chiemsee" & (YEAR==2011))) %>%
+  filter(!(Gewaesser=="Chiemsee" & YEAR==2012)) %>% # 1 plot per year -> wrong
+  filter(!(Gewaesser=="Chiemsee" & (YEAR==2014))) %>%
+  filter(!(Gewaesser=="Chiemsee" & (YEAR==2015))) %>%
+  filter(!(Gewaesser=="Chiemsee" & (YEAR==2017))) %>%
+  filter(!(Gewaesser=="Staffelsee - Sued" & (YEAR==2012))) %>%
+  filter(!(Gewaesser=="Gr. Alpsee" & (YEAR==2012))) %>%
+  filter(!(Gewaesser=="Gr. Alpsee" & (YEAR==2013))) %>%
+  filter(!(Gewaesser=="Pilsensee" & (YEAR==2015))) %>%
+  filter(!(Gewaesser=="Langbuergner See" & (YEAR==2014))) %>%
+  filter(!(Gewaesser=="Pelhamer See" & (YEAR==2017))) %>%
+  filter(!(Gewaesser=="Weitsee" & (YEAR==2017))) %>%
   distinct()
 
 # Rename depth
@@ -97,8 +97,8 @@ MacrophData <- MacrophData %>%
 
 
 # Create Dataset with all possible PLOTS
-Makroph_dataset <- MacrophData %>% group_by(Gewässer, MST_NR, YEAR) %>%
-  select(Gewässer, MST_NR, YEAR) %>% #3590 * Gew?sser, MST_NR, YEAR, Probestelle IIII 1013 *4 => 4052 m?sstens eigentlich mind sein
+Makroph_dataset <- MacrophData %>% group_by(Gewaesser, MST_NR, YEAR) %>%
+  select(Gewaesser, MST_NR, YEAR) %>% #3590 * Gew?sser, MST_NR, YEAR, Probestelle IIII 1013 *4 => 4052 m?sstens eigentlich mind sein
   distinct()
 Probestelle <- tibble(Probestelle=c("4-x","0-1","1-2", "2-4")) # tibble(Probestelle)
 Makroph_dataset <- merge(Makroph_dataset, Probestelle, by=NULL) #996 * 4 = 3984
@@ -108,21 +108,21 @@ Makroph_comm_S2 <- MacrophData %>% #group_by(Gewässer, MST_NR, DATUM, Probestel
   filter(Form=="S") %>%
   filter(Erscheinungsform!="Bryophyta" ) %>%
   filter(Erscheinungsform!="Pteridophyta" ) %>%
-  group_by(Gewässer, MST_NR, Probestelle, YEAR, Taxon) %>%
+  group_by(Gewaesser, MST_NR, Probestelle, YEAR, Taxon) %>%
   summarise(Messwert = mean(Messwert)) %>% #get rid of double values for DATUM
-  select(Gewässer, MST_NR, YEAR, Probestelle, Taxon, Messwert) %>%  #duplicated %>% which %>% #check for duplications
+  select(Gewaesser, MST_NR, YEAR, Probestelle, Taxon, Messwert) %>%  #duplicated %>% which %>% #check for duplications
   spread(Taxon, Messwert)%>%
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
   select_if(~sum(!is.na(.)) > 0)
 
 # Fill up dataset with all possible plots to have also zero values
 Makroph_comm_S <-  right_join(Makroph_comm_S2,
-                              Makroph_dataset, by=c("Gewässer", "MST_NR", "YEAR", "Probestelle"))
+                              Makroph_dataset, by=c("Gewaesser", "MST_NR", "YEAR", "Probestelle"))
 Makroph_comm_S$Tiefe <- plyr::revalue(Makroph_comm_S$Probestelle, c("0-1"="-0.5", "1-2"="-1.5", "2-4"="-3","4-x"="-5"))
 Makroph_comm_S<-Makroph_comm_S%>%
   mutate(Tiefe=as.numeric(Tiefe))%>%
   mutate_if(is.numeric, ~replace(., is.na(.), 0))%>%
-  rename(Lake=Gewässer, Depth=Tiefe)
+  rename(Lake=Gewaesser, Depth=Tiefe)
 
 # Calculate Gamma richness per depth
 Makroph_commLastYear <- Makroph_comm_S %>%
@@ -136,6 +136,40 @@ Makroph_commLastYear <- Makroph_comm_S %>%
 # Save output
 usethis::use_data(Makroph_comm_S, overwrite = TRUE)
 usethis::use_data(Makroph_commLastYear, overwrite = TRUE)
+
+
+# Select for emerg / floating-leaf species
+Makroph_comm_EFSB <- MacrophData %>% #group_by(Gewässer, MST_NR, DATUM, Probestelle, Taxon) %>%
+  filter(Form %in% c("Em","F-SB")) %>%
+  filter(Erscheinungsform!="Bryophyta" ) %>%
+  filter(Erscheinungsform!="Pteridophyta" ) %>%
+  group_by(Gewaesser, MST_NR, Probestelle, YEAR, Taxon) %>%
+  summarise(Messwert = mean(Messwert)) %>% #get rid of double values for DATUM
+  select(Gewaesser, MST_NR, YEAR, Probestelle, Taxon, Messwert) %>%  #duplicated %>% which %>% #check for duplications
+  spread(Taxon, Messwert)%>%
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
+  select_if(~sum(!is.na(.)) > 0)
+
+# Fill up dataset with all possible plots to have also zero values
+Makroph_comm_EFSB <-  right_join(Makroph_comm_EFSB,
+                              Makroph_dataset, by=c("Gewaesser", "MST_NR", "YEAR", "Probestelle"))
+Makroph_comm_EFSB$Tiefe <- plyr::revalue(Makroph_comm_EFSB$Probestelle, c("0-1"="-0.5", "1-2"="-1.5", "2-4"="-3","4-x"="-5"))
+Makroph_comm_EFSB<-Makroph_comm_EFSB%>%
+  mutate(Tiefe=as.numeric(Tiefe))%>%
+  mutate_if(is.numeric, ~replace(., is.na(.), 0))%>%
+  rename(Lake=Gewaesser, Depth=Tiefe)
+
+# Calculate Gamma richness per depth
+Makroph_comm_EFSBLastYear <- Makroph_comm_EFSB %>%
+  group_by(Lake, YEAR,Depth) %>%
+  summarise_at(vars(-"MST_NR", -"Probestelle"), mean, na.rm=T)%>%
+  ungroup() %>%
+  group_by(Lake) %>%
+  #filter(YEAR==max(YEAR))%>%
+  select(where(~ any(. != 0)))
+
+usethis::use_data(Makroph_comm_EFSB, overwrite = TRUE)
+usethis::use_data(Makroph_comm_EFSBLastYear, overwrite = TRUE)
 
 
 
@@ -327,8 +361,53 @@ usethis::use_data(MAK_MAPPED, overwrite = TRUE)
 #
 # MAK_MAPPED_din <- MAK_MAPPED_din %>% mutate(LakeID=paste0("lake_",LakeID))
 
+# Observed gamma richness EFSB -------------------------------------------------
 
-#
+SPlengthEFSB <- length(Makroph_comm_EFSBLastYear)-3
+Makroph_comm_EFSBLastYear$GAMMA <- vegan::specnumber(Makroph_comm_EFSBLastYear[,c(4:55)])
+
+Makroph_comm_EFSBLastYearfin<-Makroph_comm_EFSBLastYear %>% # %>%
+  filter(!Lake %in% c("Altmuehlsee", "Drachensee", "Eixendorfer See",
+                      "Grosser Brombachsee",
+                      "Gruentensee","Igelsbachsee",
+                      "Kleiner Brombachsee",
+                      "Liebensteinspeicher","Rottachsee",
+                      "Steinberger See","Untreusee",
+                      "Walchensee","Murnersee","Rothsee",
+                      "Seehamer See"))%>%
+  select(where(~ any(. != 0)))
+
+MAK_MAPPED_NSPEC_EFSB <- Makroph_comm_EFSBLastYearfin %>%
+  select(-Lake, -YEAR, -Depth, -GAMMA) %>% ncol()
+
+MAK_MAPPED_EFSB<-Makroph_comm_EFSBLastYearfin %>%
+  #rename(Lake=Gewässer, Depth=Tiefe) %>% #%>%  spread(Depth, GAMMA)
+  select(Lake, YEAR, Depth, GAMMA) %>%
+  mutate(GAMMAperc = GAMMA/MAK_MAPPED_NSPEC_EFSB*100)
+
+MAK_MAPPED_EFSB$LakeID <- MAK_MAPPED_EFSB  %>% group_indices(Lake)
+
+MAK_MAPPED_EFSB <- MAK_MAPPED_EFSB %>% mutate(LakeID=paste0("lake_",LakeID))
+
+fulllakenames_EFSB <- MAK_MAPPED_EFSB %>% select(Lake,LakeID) %>% unique() %>%
+  filter(LakeID!="lake_11")
+
+#usethis::use_data(fulllakenames, overwrite = TRUE)
+#usethis::use_data(MAK_MAPPED_EFSB, overwrite = TRUE)
+
+
+
+MAK_MAPPED_ALL <- left_join(MAK_MAPPED_EFSB, MAK_MAPPED, by=join_by(Lake, Depth, LakeID, YEAR)) %>%
+  rename("GAMMA_EFSB"="GAMMA.x",
+         "GAMMAperc_EFSB"="GAMMAperc.x",
+         "GAMMA_S"="GAMMA.y",
+         "GAMMAperc_S"="GAMMAperc.y")
+
+usethis::use_data(MAK_MAPPED_ALL, overwrite = TRUE)
+
+
+
+
 ## Gamma richness per indicator group
 MAK_MAPPED_NSPEC_indicationspec <- Makroph_comm_S %>%
   gather("Species", "Kohler",5:89) %>%
