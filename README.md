@@ -10,6 +10,9 @@
 
 
 ## Journal references
+*Release 1.0* corresponds to the following publication:
+
+- Anne Lewerentz, Markus Hoffmann, Thomas Hovestadt, Uta Raeder, Juliano Sarmento Cabral. 2023. Synergistic effects between global warming and water quality change on modelled macrophyte species richness. Oikos, accepted.
 
 *Release 0.9* corresponds to a *Preprint*:
 
